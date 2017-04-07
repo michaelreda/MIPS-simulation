@@ -1,0 +1,61 @@
+module rf(
+	clk,
+	RegWriteSig,
+	readReg1,readReg2,writeReg,
+	writeData,
+	RegData1,RegData2
+);
+	input clk;
+	input RegWriteSig;
+	input[1:0] readReg1,readReg2,writeReg;
+	input[31:0] writeData;
+	output[31:0] RegData1,RegData2;
+	reg[31:0]RegData1,RegData2;
+	reg[31:0]registersArray[3:0];
+
+	always @(readReg1 or readReg2)
+	begin 
+		RegData1 <= (readReg1==0)?32'b0:registersArray[readReg1];
+		RegData2 <= (readReg2==0)?32'b0:registersArray[readReg2];
+	end
+	
+	always @(posedge clk)
+	begin
+		if(RegWriteSig)
+			registersArray[writeReg] <= writeData;	
+	end
+
+endmodule
+
+module tb();
+	reg clk;
+	reg RegWriteSig;
+	reg[1:0] readReg1,readReg2,writeReg;
+	reg[31:0] writeData;
+	wire[31:0] RegData1,RegData2;
+	
+	rf test(clk,
+	RegWriteSig,
+	readReg1,readReg2,writeReg,
+	writeData,
+	RegData1,RegData2);
+	
+	initial begin
+		clk=0;
+		forever
+		#5 clk = ~clk;
+	end
+	
+	initial begin
+		#5 readReg1 <= 2'b0;
+		#10 writeReg <= 2'b01;RegWriteSig<=1; writeData<= 32'd 50;
+		#10 RegWriteSig <=0;
+		#10 readReg2 <= 2'b01;
+		#5 $finish;
+	end
+	
+	initial
+		$monitor("time: %t ReadData1: %d ReadData1: %d  clk: %d signal: %d",$time,RegData1,RegData2,clk,RegWriteSig);
+	
+	
+endmodule
