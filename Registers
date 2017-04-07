@@ -7,11 +7,11 @@ module rf(
 );
 	input clk;
 	input RegWriteSig;
-	input[1:0] readReg1,readReg2,writeReg;
+	input[4:0] readReg1,readReg2,writeReg;
 	input[31:0] writeData;
 	output[31:0] RegData1,RegData2;
 	reg[31:0]RegData1,RegData2;
-	reg[31:0]registersArray[3:0];
+	reg[31:0]registersArray[31:0];
 
 	always @(readReg1 or readReg2)
 	begin 
@@ -30,7 +30,7 @@ endmodule
 module tb();
 	reg clk;
 	reg RegWriteSig;
-	reg[1:0] readReg1,readReg2,writeReg;
+	reg[4:0] readReg1,readReg2,writeReg;
 	reg[31:0] writeData;
 	wire[31:0] RegData1,RegData2;
 	
@@ -47,15 +47,15 @@ module tb();
 	end
 	
 	initial begin
-		#5 readReg1 <= 2'b0;
-		#10 writeReg <= 2'b01;RegWriteSig<=1; writeData<= 32'd 50;
+		#5 readReg1 <= 5'd0;
+		#10 writeReg <= 5'd20;RegWriteSig<=1; writeData<= 32'd 50;
 		#10 RegWriteSig <=0;
-		#10 readReg2 <= 2'b01;
+		#10 readReg2 <= 5'd20;
 		#5 $finish;
 	end
 	
 	initial
-		$monitor("time: %t ReadData1: %d ReadData1: %d  clk: %d signal: %d",$time,RegData1,RegData2,clk,RegWriteSig);
+		$monitor("time: %t ReadData1: %d ReadData2: %d  clk: %d signal: %d",$time,RegData1,RegData2,clk,RegWriteSig);
 	
 	
 endmodule
