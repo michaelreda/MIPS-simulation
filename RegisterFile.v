@@ -1,4 +1,4 @@
-module rf(
+module RegisterFile(
 	clk,
 	RegWriteSig,
 	readReg1,readReg2,writeReg,
@@ -34,7 +34,7 @@ module tb();
 	reg[31:0] writeData;
 	wire[31:0] RegData1,RegData2;
 	
-	rf test(clk,
+	RegisterFile test(clk,
 	RegWriteSig,
 	readReg1,readReg2,writeReg,
 	writeData,
