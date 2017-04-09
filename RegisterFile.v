@@ -1,11 +1,10 @@
 module RegisterFile(
-	clk,
 	RegWriteSig,
 	readReg1,readReg2,writeReg,
 	writeData,
 	RegData1,RegData2
 );
-	input clk;
+	
 	input RegWriteSig;
 	input[4:0] readReg1,readReg2,writeReg;
 	input[31:0] writeData;
@@ -19,7 +18,7 @@ module RegisterFile(
 		RegData2 <= (readReg2==0)?32'b0:registersArray[readReg2];
 	end
 	
-	always @(posedge clk)
+	always @(RegWriteSig or writeReg or writeData)
 	begin
 		if(RegWriteSig)
 			registersArray[writeReg] <= writeData;	

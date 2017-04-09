@@ -1,18 +1,14 @@
-module DataMemory(outputData, inputAddress, inputData, MemRead, MemWrite,clk);
+module DataMemory(outputData, inputAddress, inputData, MemRead, MemWrite);
 output [31:0] outputData;
 reg [31:0] outputData;
-input clk;
 input[31:0] inputAddress;
 input[31:0] inputData;
 input MemRead, MemWrite;
 
 reg [7:0]memory[255:0]; //memory //check about size !
 
-integer addressInt, i, j, power;
 
-
-//mips is big endian
-always @(posedge clk)
+always @(inputAddress or inputData or MemRead or MemWrite )
 begin
 	if(MemWrite==1) 
 	begin
