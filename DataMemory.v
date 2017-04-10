@@ -42,7 +42,7 @@ module tb();
 	DataMemory test(
 	outputData,
 	inputAddress,inputData,
-	MemRead, MemWrite,clk);
+	MemRead, MemWrite);
 	
 	initial begin
 		clk=0;

@@ -33,7 +33,7 @@ module tb();
 	reg[31:0] writeData;
 	wire[31:0] RegData1,RegData2;
 	
-	RegisterFile test(clk,
+	RegisterFile test(
 	RegWriteSig,
 	readReg1,readReg2,writeReg,
 	writeData,
