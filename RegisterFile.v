@@ -11,7 +11,7 @@ module RegisterFile(
 	output[31:0] RegData1,RegData2;
 	reg[31:0]RegData1,RegData2;
 	reg[31:0]registersArray[31:0];
-
+	initial registersArray[0] = 32'd0;
 	always @(readReg1 or readReg2)
 	begin 
 		RegData1 <= (readReg1==0)?32'b0:registersArray[readReg1];
@@ -21,8 +21,12 @@ module RegisterFile(
 	always @(RegWriteSig or writeReg or writeData)
 	begin
 		if(RegWriteSig)
+		     begin
+			if(writeReg>0)			
 			registersArray[writeReg] <= writeData;	
-	end
+		         
+		     end
+	end	
 
 endmodule
 
