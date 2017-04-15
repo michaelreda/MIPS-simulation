@@ -56,7 +56,9 @@ endmodule
 
 /////decode stage////////////
 
-module decode();
+module decode(clk, instruction, data, regWrite, writeToReg, ID_EX);
+input clk, regWrite;
+input [63:0] instruction;
 
 
 endmodule
