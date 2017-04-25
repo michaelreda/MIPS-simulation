@@ -23,13 +23,22 @@ reg [146:0] ID_EX;
 reg [106:0] EX_MEM;
 reg [70:0] MEM_WB;
 
+//outputs from writeback stage
+wire[31:0] out_writeData;
+wire[4:0] out_rd;
 
+//outputs from Memory stage
+wire PCSrc;
+wire out_branch_address;
 
 //exec  ( clk, WB 2b   , M 3b      ,EXE 4b    , incPC 32b, in_regData1 32b,in_regData2  32b, in_sign_extended_offset 32b, in_rt 5b ,     in_rd 5b    ,out_WB 2b,  out_M 3b   ,out_branch_address 32b,out_zero_flag 1b,out_ALU_result 32b,out_reg_write_data 32,out_rd)
 execute (clk,ID_EX[1:0], ID_EX[4:2],ID_EX[8:5], ID_EX[40:9], ID_EX[72:41]   ,ID_EX[104:73]   ,   ID_EX[136:105]         ,ID_EX[141:137],ID_EX[146:142], EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102]);
 
 //mem(clk,in_WB 2b     ,  in_M 3b,  in_branch_address 32b,in_zero_flag 1b,in_ALU_result 32b,  in_reg_write_data 32b,   in_rd  5b    ,out_WB 2b ,out_ALU_result 32b,out_memory_word_read 32b,out_rd 5b);
-memory (clk,EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102],MEM_WB[1:0],    MEM_WB[33:2]  ,        MEM_WB[65:34]  ,MEM_WB[70:66]);
+memory (clk,EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102],MEM_WB[1:0],    MEM_WB[33:2]  ,        MEM_WB[65:34]  ,MEM_WB[70:66], PCSrc,out_branch_address);
+
+//WB(      clk,in_WB 2b ,in_ALU_result 32b,in_memory_word_read 32b,      in_rd 5b,  out_writeData,out_rd
+writeBack(clk,MEM_WB[1:0],    MEM_WB[33:2]  ,        MEM_WB[65:34]  ,MEM_WB[70:66], out_writeData,out_rd);
 
 endmodule
 
@@ -114,7 +123,7 @@ endmodule
 
 ////mem  stage//////////////
 module memory(clk,in_WB,in_M,in_branch_address,in_zero_flag,in_ALU_result,in_reg_write_data,in_rd,
-  out_WB,out_ALU_result,out_memory_word_read,out_rd);
+  out_WB,out_ALU_result,out_memory_word_read,out_rd,PCSrc,out_branch_address);
 input clk;
 input [1:0] in_WB;
 input [2:0] in_M;
@@ -125,29 +134,33 @@ input [4:0] in_rd;
 output reg [31:0] out_ALU_result,out_memory_word_read;
 output reg [4:0] out_rd;
 output reg [1:0] out_WB;
+output reg PCSrc;
+output reg [31:0] out_branch_address;
 
 assign out_WB = in_WB;
 assign out_rd = in_rd;
+assign out_branch_address= in_branch_address;
 
 DataMemory(out_memory_word_read,in_ALU_result,in_reg_write_data,in_M[0],in_M[1]);
 
-reg PCSrc;
+
 assign PCSrc = in_zero_flag & in_M[2];
 
 endmodule
 
 ///// write back stage//////
 
-module writeBack(in_WB,in_regData1,in_regData2,in_regData3,out_wb,out_muxRes,out_regData);
-	input in_WB;
-	input [31:0] in_regData1,in_regData2,in_regData3;
-	output reg out_wb;
-	output reg [31:0] out_muxRes, out_regData;
+module writeBack(clk,in_WB,in_ALU_result,in_memory_word_read,in_rd,out_writeData,out_rd);
+  input clk;
+	input [1:0] in_WB;
+	input [31:0] in_ALU_result,in_memory_word_read;
+  input [4:0] in_rd;
+	output reg out_regWrite;
+	output reg [31:0] out_writeData, out_rd;
 
-	assign out_WB = in_WB;
-	assign out_regData = in_regData3;
+	assign out_rd = in_rd;
 
-	MUX_2to1(out_muxRes, in_regData1, in_regData2, in_WB);
+	MUX_2to1(out_writeData, in_ALU_result,in_memory_word_read, in_WB[1]);
 endmodule
 
 ///test bench///////////////
