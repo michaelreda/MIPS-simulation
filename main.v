@@ -121,8 +121,6 @@ module writeBack(in_WB,in_regData1,in_regData2,in_regData3,out_wb,out_muxRes,out
 	MUX_2to1(out_muxRes, in_regData1, in_regData2, in_WB);
 endmodule
 
-endmodule
-
 ///test bench///////////////
 
 module testbench();
