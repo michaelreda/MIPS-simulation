@@ -86,6 +86,11 @@ output reg [1:0] out_WB;
 assign out_WB = in_WB;
 assign out_rd = in_rd;
 
+DataMemory(out_memory_word_read,in_ALU_result,in_reg_write_data,in_M[0],in_M[1]);
+
+reg PCSrc;
+and(PCSrc,in_zero_flag,in_M[2]);
+
 endmodule
 
 ///// write back stage//////
