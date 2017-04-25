@@ -31,14 +31,26 @@ wire[4:0] out_rd;
 wire PCSrc;
 wire out_branch_address;
 
+fetch f(clk,out_branch_address,PCSrc,IF_ID[31:0], IF_ID[63:32]);
+
+
+
+
+module decode( clk, regWrite, in_incremented_pc, in_instruction, in_data, in_writeToReg, 
+              out_WB, out_M,out_EX,out_incremented_pc, out_data1, out_data2, out_extended, out_rt, out_rd );
+
+
+
+decode d(clk, );
+
 //exec  ( clk, WB 2b   , M 3b      ,EXE 4b    , incPC 32b, in_regData1 32b,in_regData2  32b, in_sign_extended_offset 32b, in_rt 5b ,     in_rd 5b    ,out_WB 2b,  out_M 3b   ,out_branch_address 32b,out_zero_flag 1b,out_ALU_result 32b,out_reg_write_data 32,out_rd)
-execute (clk,ID_EX[1:0], ID_EX[4:2],ID_EX[8:5], ID_EX[40:9], ID_EX[72:41]   ,ID_EX[104:73]   ,   ID_EX[136:105]         ,ID_EX[141:137],ID_EX[146:142], EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102]);
+execute e(clk,ID_EX[1:0], ID_EX[4:2],ID_EX[8:5], ID_EX[40:9], ID_EX[72:41]   ,ID_EX[104:73]   ,   ID_EX[136:105]         ,ID_EX[141:137],ID_EX[146:142], EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102]);
 
 //mem(clk,in_WB 2b     ,  in_M 3b,  in_branch_address 32b,in_zero_flag 1b,in_ALU_result 32b,  in_reg_write_data 32b,   in_rd  5b    ,out_WB 2b ,out_ALU_result 32b,out_memory_word_read 32b,out_rd 5b);
-memory (clk,EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102],MEM_WB[1:0],    MEM_WB[33:2]  ,        MEM_WB[65:34]  ,MEM_WB[70:66], PCSrc,out_branch_address);
+memory m(clk,EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102],MEM_WB[1:0],    MEM_WB[33:2]  ,        MEM_WB[65:34]  ,MEM_WB[70:66], PCSrc,out_branch_address);
 
 //WB(      clk,in_WB 2b ,in_ALU_result 32b,in_memory_word_read 32b,      in_rd 5b,  out_writeData,out_rd
-writeBack(clk,MEM_WB[1:0],    MEM_WB[33:2]  ,        MEM_WB[65:34]  ,MEM_WB[70:66], out_writeData,out_rd);
+writeBack w(clk,MEM_WB[1:0],    MEM_WB[33:2]  ,        MEM_WB[65:34]  ,MEM_WB[70:66], out_writeData,out_rd);
 
 endmodule
 
@@ -59,6 +71,18 @@ MUX_2to1 pc_update(clk,mux_out, out_incremented_pc , in_branch, in_branchSel);
 TTbitReg PC (clk,0, mux_out, pc_out);
 Instruction_memory IM(clk,pc_out, out_instruction);
 Adder32Bit pc_increment(clk,out_incremented_pc, overflowBit,pc_out, 32'd4);
+
+always @ (posedge clk)
+begin
+$monitor("---fetch Stage:--- INPUTS:\n in_branchSel: %b \n",in_branchSel,
+          "in_branch %b \n",in_branch,
+          "---fetch Stage:--- OUTPUTS:\n out_instruction %b \n",out_instruction,
+          "out_M %b \n",out_M,
+          "out_EX %b \n",out_EX,
+         "out_incremented_pc %d \n",out_incremented_pc,
+          "out_incremented_pc %d \n",out_incremented_pc,
+          );
+end
 
 
 endmodule
@@ -98,6 +122,29 @@ assign out_EX = {RegDst ,ALUop, ALUsrc};
 
 RegisterFile regfile(clk,in_regWrite, read1, read2, in_writeToReg, in_data, out_data1, out_data2 );
 SignExtender_16to32 se(out_extended, into_extender);
+
+
+
+always @ (posedge clk)
+begin
+$monitor("---decode Stage:--- INPUTS:\n in_regWrite: %b \n",in_regWrite,
+          "in_instruction %b \n",in_instruction,
+          "in_data %b \n",in_data,
+          "in_writeToReg %d \n",in_writeToReg,
+          "---decode Stage:--- OUTPUTS:\n out_WB %b \n",out_WB,
+          "out_M %b \n",out_M,
+          "out_EX %b \n",out_EX,
+         "out_incremented_pc %d \n",out_incremented_pc,
+          "out_data1 %d \n",out_data1,
+          "out_data2 %d \n",out_data2,
+          "out_rd %d \n",out_rd
+          "out_rt %d \n",out_rt
+          "out_extended %d \n",out_extended
+          );
+end
+
+
+
 endmodule 
 
 /////execute stage//////////
@@ -122,19 +169,19 @@ assign out_M = in_M;
 assign out_reg_write_data=in_regData2;
 
 reg [31:0] shifted_sign_extended_offset;
-ShiftLeft2Bits shifter(shifted_sign_extended_offset,in_sign_extended_offset)
+ShiftLeft2Bits shifter(shifted_sign_extended_offset,in_sign_extended_offset);
 Adder32Bit adder(out_branch_address,in_incremented_PC,shifted_sign_extended_offset);
 
 reg[2:0] ALU_CTRL_output;
-ALU_CTRL(in_sign_extended_offset[5:0],in_EX[3:2],ALU_CTRL_output);
+ALU_CTRL ctrl(in_sign_extended_offset[5:0],in_EX[3:2],ALU_CTRL_output);
 
 
 reg[31:0] ALU_input2;
-MUX_2to1 mux(ALU_input2,in_regData2,in_sign_extended_offset,in_EX[0]);
+MUX_2to1 mux1(ALU_input2,in_regData2,in_sign_extended_offset,in_EX[0]);
 
-ALU(in_regData1,ALU_input2,out_ALU_result,ALU_CTRL_output,out_zero_flag );
+ALU alu(in_regData1,ALU_input2,out_ALU_result,ALU_CTRL_output,out_zero_flag );
 
-MUX_2to1 mux(out_rd,in_rt,in_rd,in_EX[1]);
+MUX_2to1 mux2(out_rd,in_rt,in_rd,in_EX[1]);
 
 always @ (posedge clk)
 begin
