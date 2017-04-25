@@ -6,10 +6,10 @@ output [2:0] select;
 reg [2:0] select;
 
 
-always @(clk)
+always @(posedge clk)
 begin
 case(in)
- 
+
 6'h20: begin
  	select <= 3'd0;
        end
@@ -37,7 +37,7 @@ end
 
 
 endmodule
- 
+
 
 
 
@@ -64,11 +64,10 @@ initial begin
 #20 in <= 6'h0;
 #25 in <= 6'h2;
 #30 in <= 6'h2A;
-#35 $finish; 
+#35 $finish;
 end
 
 
 initial
 		$monitor("time: %t in: %h alu_op: %h  sel: %d",$time,in,alu_op,sel);
 endmodule
-

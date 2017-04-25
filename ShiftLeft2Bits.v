@@ -3,8 +3,8 @@ module ShiftLeft2Bits(clk,outData,inData);
   output [31:0]outData;
   reg [31:0]outData;
   input clk;
-  
-  always@(clk)
+
+  always@(posedge clk)
     begin
       outData = inData<<2;
     end
@@ -31,7 +31,7 @@ initial begin
 #10 inData <= 32'd12;
 
 
-#15 $finish; 
+#15 $finish;
 end
 
 

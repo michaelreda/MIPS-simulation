@@ -6,7 +6,7 @@ input[2:0] aluop;
 output reg [31:0] out;
 output reg zeroflag;
 
-always @(clk)
+always @(posedge clk)
 begin
 if(in1==in2)
 zeroflag=1;
@@ -16,11 +16,11 @@ zeroflag=0;
 case(aluop)
 0:out=in1+in2; //add
 1:out=in1-in2; //sub
-2:out=in1&in2; //and 
+2:out=in1&in2; //and
 3:out=in1|in2; //or
 4:out=in1<<in2; //sll Shift left logical
 5:out=in1>>in2; //srl Shift right logical
-6:out=(in1<in2)?1:0; //slt set on less than 
+6:out=(in1<in2)?1:0; //slt set on less than
 endcase
 end
 endmodule
@@ -59,4 +59,3 @@ end
 ALU testing(x,y,res,select,zeroflag);
 
 endmodule
-

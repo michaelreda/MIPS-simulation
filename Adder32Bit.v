@@ -6,7 +6,7 @@ module Adder32Bit(clk,out,in1, in2);
   output overflowBit;
   input clk;
 // reg overflowBit;
-      always@(clk)
+      always@(posedge clk)
         begin
           out  = in1 + in2;
           // {overflowBit , out } = in1 + in2;

@@ -8,17 +8,17 @@ input MemRead, MemWrite, clk;
 reg [7:0]memory[255:0]; //memory //check about size !
 
 
-always @(clk )
+always @(posedge clk )
 begin
-	if(MemWrite==1) 
+	if(MemWrite==1)
 	begin
 		memory[inputAddress] = inputData[31:24];
 		memory[inputAddress+1] = inputData[23:16];
 		memory[inputAddress+2] = inputData[15:8];
 		memory[inputAddress+3] = inputData[7:0];
 	end
-	
-	if (MemRead==1) 
+
+	if (MemRead==1)
 	begin
 		outputData[31:24] = memory[inputAddress][7:0];
 		outputData[23:16] = memory[inputAddress+1][7:0];
@@ -28,7 +28,7 @@ begin
 
 end
 
-	
+
 
 endmodule
 
@@ -38,28 +38,28 @@ module tb();
 	reg[31:0] inputAddress,inputData;
 	reg clk;
 	wire[31:0] outputData;
-	
+
 	DataMemory test(
 	outputData,
 	inputAddress,inputData,
 	MemRead, MemWrite);
-	
+
 	initial begin
 		clk=0;
 		forever
 		#5 clk = ~clk;
 	end
-	
+
 	initial begin
-		
+
 		#10 inputAddress <= 5'd20; inputData<= 32'd 50;
 		#10 MemWrite <= 1'b1;
 		#10 MemRead <= 1'b1;MemWrite <= 1'b0;
 		#10 $finish;
 	end
-	
+
 	initial
 		$monitor("time: %t outputData: %d inputAddress: %d ",$time,outputData,inputAddress);
-	
-	
+
+
 endmodule

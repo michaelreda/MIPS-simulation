@@ -3,8 +3,8 @@ module TTbitReg (clk,reset, in, out);
     input	[31:0]	in;
     output 	[31:0] 	out;
     reg 	[31:0]	out;
-   
-    always @(clk)
+
+    always @(posedge clk)
     begin
         if (reset) out <= 32'd0;
         else out <= in;
@@ -28,7 +28,7 @@ initial begin
 	end
 
 
-	
+
 initial begin
 #0 in <= 32'd2;
 #0 reset <= 0;
@@ -37,7 +37,7 @@ initial begin
 #5 in <= 32'd5;
 
 
-#15 $finish; 
+#15 $finish;
 end
 
 initial

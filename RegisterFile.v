@@ -12,13 +12,13 @@ module RegisterFile(clk,
 	reg[31:0]RegData1,RegData2;
 	reg[31:0]registersArray[31:0];
 	initial registersArray[0] = 32'd0;
-	always @(clk)
+	always @(posedge clk)
 	begin
 		RegData1 <= (readReg1==0)?32'b0:registersArray[readReg1];
 		RegData2 <= (readReg2==0)?32'b0:registersArray[readReg2];
 	end
 
-	always @(clk)
+	always @(posedge clk)
 	begin
 		if(WB)
 		     begin

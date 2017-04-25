@@ -4,16 +4,16 @@ input [31:0] in1, in2, in3;
   output [31:0]out;
   reg [31:0]out;
   input clk;
-  always @(clk )
-    begin 
+  always @(posedge clk )
+    begin
       case(select)
           2'b00: out <= in1;
           2'b01: out <= in2;
 	      2'b10: out <= in3;
-	      2'b11: out <= 32'bz;	
+	      2'b11: out <= 32'bz;
       endcase
     end
- endmodule  
+ endmodule
 
 
 module testbench();
@@ -42,7 +42,7 @@ initial begin
 #0 in2 <= 32'd0;
 
 
-#25 $finish; 
+#25 $finish;
 end
 
 
