@@ -83,7 +83,7 @@ assign out_WB = in_WB;
 assign out_M = in_M;
 assign out_reg_write_data=in_regData2;
 
-reg [32:0] shifted_sign_extended_offset;
+reg [31:0] shifted_sign_extended_offset;
 ShiftLeft2Bits shifter(shifted_sign_extended_offset,in_sign_extended_offset)
 Adder32Bit adder(out_branch_address,in_incremented_PC,shifted_sign_extended_offset);
 
