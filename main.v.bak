@@ -110,16 +110,17 @@ endmodule
 ///// write back stage//////
 
 module writeBack(clk,in_WB,in_regData1,in_regData2,in_regData3,out_wb,out_muxRes,out_regData);
-	//input clk???
-	input in_WB;
-	input [31:0] in_regData1,in_regData2,in_regData3;
-	output reg out_wb;
-	output reg [31:0] out_muxRes, out_regData;
+//input clk???
+input in_WB;
+input [31:0] in_regData1,in_regData2,in_regData3;
+output reg out_wb;
+output reg [31:0] out_muxRes, out_regData;
 
-	assign out_WB = in_WB;
-	assign out_regData = in_regData3;
+assign out_WB = in_WB;
+assign out_regData = in_regData3;
 
-	MUX_2to1(out_muxRes, in_regData1, in_regData2, in_WB);
+MUX_2to1(out_muxRes, in_regData1, in_regData2, in_WB);
+
 endmodule
 
 endmodule
