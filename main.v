@@ -16,12 +16,19 @@
 
 //////main pipelined circuit////
 
-module main;
-  initial
-    begin
-      $display("Hello, World");
-      $finish ;
-    end
+module main(clk);
+
+reg [63:0] IF_ID;
+reg [146:0] ID_EX;
+reg [106:0] EX_MEM;
+reg [70:0] MEM_WB;
+
+
+
+//exec  ( WB 2b   , M 3b        ,EXE 4b    , incPC 32b, in_regData1 32b,in_regData2  32b, in_sign_extended_offset 32b, in_rt 5b ,     in_rd 5b    ,out_WB 2b,  out_M 3b   ,out_branch_address 32b,out_zero_flag 1b,out_ALU_result 32b,out_reg_write_data 32,out_rd)
+execute (clk,ID_EX[1:0],ID_EX[4:2],ID_EX[8:5], ID_EX[40:9], ID_EX[72:41]   ,ID_EX[104:73]   ,   ID_EX[136:105]         ,ID_EX[141:137],ID_EX[146:142], EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102]);
+
+
 endmodule
 
 //////fetch stage//////////////
