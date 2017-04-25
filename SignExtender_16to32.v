@@ -1,10 +1,10 @@
-module SignExtender_16to32(outData,inData);
-  
+module SignExtender_16to32(clk,outData,inData);
+  input clk;
   input[15:0] inData;
   output[31:0] outData;
   reg [31:0] outData;
   
-  always@(inData)
+  always@(clk)
     begin
       
       outData[15:0]  = inData[15:0];

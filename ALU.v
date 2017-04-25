@@ -1,11 +1,12 @@
-module ALU(in1,in2,out,aluop,zeroflag);
+module ALU(clk,in1,in2,out,aluop,zeroflag);
+input clk;
 input[31:0] in1;
 input[31:0] in2;
 input[2:0] aluop;
 output reg [31:0] out;
 output reg zeroflag;
 
-always @(in1,in2,aluop)
+always @(clk)
 begin
 if(in1==in2)
 zeroflag=1;

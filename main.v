@@ -44,42 +44,61 @@ endmodule
 
 //////fetch stage//////////////
 
-module fetch(clk, branchIN , branchSel, IF_ID);
-input ckl, branchSel;
-input [31:0] branchIN, noBranchIN;
-output [63:0] IF_ID;
-reg [63:0] IF_ID;
-wire [31:0] mux_out, summation, instruction,pc_out;
-32bitReg PC (0, pc_in, pc_out);
+module fetch(clk, in_branch , in_branchSel, out_instruction, out_incremented_pc );
+input clk, in_branchSel;
+input [31:0] in_branch;
+output [31:0] out_instruction, out_incremented_pc ;
+reg [31:0]  out_instruction, out_incremented_pc;
+
+wire [31:0] mux_out, pc_out;
+
+
 //initial PC = 32'd40;
 
-MUX_2to1 pc_update(mux_out, summation , branchIN, branchSel);
-Instruction_memory IM(read_address, instruction);
-Adder32Bit pc_increment(summation, overflowBit,adder_in1, 32'd4);
+MUX_2to1 pc_update(clk,mux_out, out_incremented_pc , in_branch, in_branchSel);
+TTbitReg PC (clk,0, mux_out, pc_out);
+Instruction_memory IM(clk,pc_out, out_instruction);
+Adder32Bit pc_increment(clk,out_incremented_pc, overflowBit,pc_out, 32'd4);
 
 
-
-always @(branchIN or branchSel )
-begin
-pc_in <= mux_out;
-end
-always @(posedge clk)
- begin
-  read_address <= pc_out;
-  adder_in1    <= pc_out;
-  IF_ID[31:0]  <= instruction;
-  IF_ID[63:32] <= summation;
- end
 endmodule
+
+
+
 
 /////decode stage////////////
 
-module decode(clk, instruction, data, regWrite, writeToReg, ID_EX);
-input clk, regWrite;
-input [63:0] instruction;
+module decode( clk, regWrite, in_incremented_pc, in_instruction, in_data, in_writeToReg, 
+              out_WB, out_M,out_EX,out_incremented_pc, out_data1, out_data2, out_extended, out_rt, out_rd );
+input clk,in_regWrite;
+input [31:0] in_instruction, in_data,;
+input [3:0] in_writeToReg;
+output [1:0] out_WB;
+output [2:0] out_M;
+output [3:0] out_EX;
+output [31:0] out_incremented_pc, out_data1, out_data2, out_extended;
+output [4:0] out_rd, out_rt;
+
+wire op_code = instruction[5:0];
+wire into_extender = instruction[15:0];
+wire read1 = [10:6];
+wire read2 =[15:11];
 
 
-endmodule
+assign out_incremented_pc = in_incremented_pc  ;
+assign out_rd = instruction[20:16];
+assign out_rt = instruction[15:11];
+ 
+assign 
+
+Control main_crtl(clk,RegDst,Branch,MemRead,MemtoReg,ALUop,MemWrite,ALUsrc,RegWrite,op_code);
+assign out_WB = {RegWrite, MemtoReg};
+assign out_M  = {Branch, MemRead, MemWrite};
+assign out_EX = {RegDst ,ALUop, ALUsrc};
+
+RegisterFile regfile(clk,in_regWrite, read1, read2, in_writeToReg, in_data, out_data1, out_data2 );
+SignExtender_16to32 se(out_extended, into_extender);
+endmodule 
 
 /////execute stage//////////
 

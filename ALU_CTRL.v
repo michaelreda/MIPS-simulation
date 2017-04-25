@@ -1,11 +1,12 @@
-module ALU_CTRL(in, alu_op, select);
+module ALU_CTRL(clk,in, alu_op, select);
+input clk;
 input [5:0]in;
 input [2:0] alu_op;
 output [2:0] select;
 reg [2:0] select;
 
 
-always @(alu_op, in)
+always @(clk)
 begin
 case(in)
  

@@ -1,24 +1,24 @@
-module RegisterFile(
+module RegisterFile(clk,
 	WB,
 	readReg1,readReg2,writeReg,
 	writeData,
 	RegData1,RegData2
 );
 
-	input WB;
+	input WB,clk;
 	input[4:0] readReg1,readReg2,writeReg;
 	input[31:0] writeData;
 	output[31:0] RegData1,RegData2;
 	reg[31:0]RegData1,RegData2;
 	reg[31:0]registersArray[31:0];
 	initial registersArray[0] = 32'd0;
-	always @(readReg1 or readReg2)
+	always @(clk)
 	begin
 		RegData1 <= (readReg1==0)?32'b0:registersArray[readReg1];
 		RegData2 <= (readReg2==0)?32'b0:registersArray[readReg2];
 	end
 
-	always @(WB or writeReg or writeData)
+	always @(clk)
 	begin
 		if(WB)
 		     begin

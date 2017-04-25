@@ -1,10 +1,10 @@
-module TTbitReg (reset, in, out);
-    input        reset;
+module TTbitReg (clk,reset, in, out);
+    input        reset, clk;
     input	[31:0]	in;
     output 	[31:0] 	out;
     reg 	[31:0]	out;
    
-    always @(in)
+    always @(clk)
     begin
         if (reset) out <= 32'd0;
         else out <= in;

@@ -1,10 +1,10 @@
-module forwarding_unit(outA, outB, RegWrite_ex_mem, RegWrite_mem_wb, Rd_ex_mem, Rd_mem_wb, Rs_id_ex, Rt_id_ex);
+module forwarding_unit(clk,outA, outB, RegWrite_ex_mem, RegWrite_mem_wb, Rd_ex_mem, Rd_mem_wb, Rs_id_ex, Rt_id_ex);
 output [1:0] outA, outB;
 reg [1:0] outA, outB;
-input RegWrite_ex_mem, RegWrite_mem_wb;
+input RegWrite_ex_mem, RegWrite_mem_wb,clk;
 input [4:0] Rd_ex_mem, Rd_mem_wb, Rs_id_ex, Rt_id_ex;
 
-always @(RegWrite_ex_mem or RegWrite_mem_wb or Rd_ex_mem or Rd_mem_wb or Rs_id_ex or Rt_id_ex)
+always @(clk)
 begin
 
 if(RegWrite_ex_mem==1 && Rd_ex_mem != 0 && Rd_ex_mem == Rs_id_ex )

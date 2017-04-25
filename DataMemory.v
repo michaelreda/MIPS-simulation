@@ -1,14 +1,14 @@
-module DataMemory(outputData, inputAddress, inputData, MemRead, MemWrite);
+module DataMemory(clk,outputData, inputAddress, inputData, MemRead, MemWrite);
 output [31:0] outputData;
 reg [31:0] outputData;
 input[31:0] inputAddress;
 input[31:0] inputData;
-input MemRead, MemWrite;
+input MemRead, MemWrite, clk;
 
 reg [7:0]memory[255:0]; //memory //check about size !
 
 
-always @(inputAddress or inputData or MemRead or MemWrite )
+always @(clk )
 begin
 	if(MemWrite==1) 
 	begin
