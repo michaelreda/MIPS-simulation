@@ -109,8 +109,7 @@ endmodule
 
 ///// write back stage//////
 
-module writeBack(clk,in_WB,in_regData1,in_regData2,in_regData3,out_wb,out_muxRes,out_regData);
-	//input clk???
+module writeBack(in_WB,in_regData1,in_regData2,in_regData3,out_wb,out_muxRes,out_regData);
 	input in_WB;
 	input [31:0] in_regData1,in_regData2,in_regData3;
 	output reg out_wb;
