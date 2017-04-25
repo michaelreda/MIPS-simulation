@@ -17,7 +17,7 @@
 //////main pipelined circuit////
 
 module main;
-  initial 
+  initial
     begin
       $display("Hello, World");
       $finish ;
@@ -31,20 +31,20 @@ input ckl, branchSel;
 input [31:0] branchIN, noBranchIN;
 output [63:0] IF_ID;
 reg [63:0] IF_ID;
-wire [31:0] mux_out, summation, instruction,pc_out; 
+wire [31:0] mux_out, summation, instruction,pc_out;
 32bitReg PC (0, pc_in, pc_out);
 //initial PC = 32'd40;
 
 MUX_2to1 pc_update(mux_out, summation , branchIN, branchSel);
-Instruction_memory IM(read_address, instruction); 
+Instruction_memory IM(read_address, instruction);
 Adder32Bit pc_increment(summation, overflowBit,adder_in1, 32'd4);
 
-  
+
 
 always @(branchIN or branchSel )
 begin
 pc_in <= mux_out;
-end 
+end
 always @(posedge clk)
  begin
   read_address <= pc_out;
@@ -65,7 +65,23 @@ endmodule
 
 /////execute stage//////////
 
-module execute();
+module execute(clk,in_WB,in_M,in_EX,in_incremented_PC,in_regData1,in_regData2,in_sign_extended_offset,in_rt,in_rd,
+  out_WB,out_M,out_branch_address,out_zero_flag,out_ALU_result,out_reg_write_data,out_rd);
+input [1:0] in_WB;
+input [2:0] in_M;
+input [3:0] in_EX;
+input [31:0] in_incremented_PC,in_regData1,in_regData2,in_sign_extended_offset;
+input [4:0] in_rt,in_rd;
+output reg [2:0] out_M;
+output reg [1:0] out_WB;
+output reg [31:0] out_branch_address,out_ALU_result,out_reg_write_data;
+output reg out_zero_flag;
+output reg [4:0] out_rd;
+
+
+assign out_WB = in_WB;
+
+
 endmodule
 
 ////mem  stage//////////////
@@ -85,4 +101,3 @@ endmodule
 
 
 ////////////////////////////
-
