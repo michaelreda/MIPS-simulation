@@ -117,7 +117,25 @@ ALU(in_regData1,ALU_input2,out_ALU_result,ALU_CTRL_output,out_zero_flag );
 
 MUX_2to1 mux(out_rd,in_rt,in_rd,in_EX[1]);
 
-// $monitor("execState: instruction: %d read_address: %d ",instruction,read_address);
+always @ (posedge clk)
+begin
+$monitor("---execute Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
+          "in_M %b \n",in_M,
+          "in_EX %b \n",in_EX,
+          "in_incremented_PC %d \n",in_incremented_PC,
+          "in_regData1 %d \n",in_regData1,
+          "in_regData2 %d \n",in_regData2,
+          "in_sign_extended_offset %d \n",in_sign_extended_offset,
+          "in_rt %d \n",in_rt,
+          "in_rd %d \n",in_rd,
+          "---execute Stage:--- OUTPUTS:\n out_WB %b \n",out_WB,
+          "out_WB %b \n",out_WB,
+          "out_branch_address %d \n",out_branch_address,
+          "out_zero_flag %d \n",out_zero_flag,
+          "out_ALU_result %d \n",out_ALU_result,
+          "out_rd %d \n",out_rd
+          );
+end
 
 endmodule
 
@@ -146,6 +164,24 @@ DataMemory(out_memory_word_read,in_ALU_result,in_reg_write_data,in_M[0],in_M[1])
 
 assign PCSrc = in_zero_flag & in_M[2];
 
+
+always @ (posedge clk)
+begin
+$monitor("---Memory Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
+          "in_M: %b \n",in_M,
+          "in_branch_address: %d \n",in_branch_address,
+          "in_zero_flag: %d \n",in_zero_flag,
+          "in_ALU_result: %d \n",in_ALU_result,
+          "in_reg_write_data: %d \n",in_reg_write_data,
+          "in_rd: %d \n",in_rd,
+          "---Memory Stage:--- OUTPUTS:\n out_WB: %b \n",out_WB,
+          "out_ALU_result: %d \n",out_ALU_result,
+          "out_memory_word_read: %d \n",out_memory_word_read,
+          "out_rd: %d \n",out_rd,
+          "PCSrc: %d \n",out_branch_address
+          );
+end
+
 endmodule
 
 ///// write back stage//////
@@ -161,6 +197,17 @@ module writeBack(clk,in_WB,in_ALU_result,in_memory_word_read,in_rd,out_writeData
 	assign out_rd = in_rd;
 
 	MUX_2to1(out_writeData, in_ALU_result,in_memory_word_read, in_WB[1]);
+
+in_WB,in_ALU_result,in_memory_word_read,in_rd,out_writeData,out_rd
+  always @ (posedge clk)
+  begin
+  $monitor("---writeBack Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
+            "in_ALU_result: %d \n",in_ALU_result,
+            "in_memory_word_read: %d \n",in_memory_word_read,
+            "in_rd: %d \n",in_rd,
+            "---writeBack Stage:--- OUTPUTS:\n out_writeData: %b \n",out_writeData,
+            "out_rd: %d \n",out_rd
+            );
 endmodule
 
 ///test bench///////////////
