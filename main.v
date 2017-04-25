@@ -17,7 +17,7 @@
 //////main pipelined circuit////
 
 module main(clk);
-
+input clk;
 reg [63:0] IF_ID;
 reg [146:0] ID_EX;
 reg [106:0] EX_MEM;
@@ -25,9 +25,11 @@ reg [70:0] MEM_WB;
 
 
 
-//exec  ( WB 2b   , M 3b        ,EXE 4b    , incPC 32b, in_regData1 32b,in_regData2  32b, in_sign_extended_offset 32b, in_rt 5b ,     in_rd 5b    ,out_WB 2b,  out_M 3b   ,out_branch_address 32b,out_zero_flag 1b,out_ALU_result 32b,out_reg_write_data 32,out_rd)
-execute (clk,ID_EX[1:0],ID_EX[4:2],ID_EX[8:5], ID_EX[40:9], ID_EX[72:41]   ,ID_EX[104:73]   ,   ID_EX[136:105]         ,ID_EX[141:137],ID_EX[146:142], EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102]);
+//exec  ( clk, WB 2b   , M 3b      ,EXE 4b    , incPC 32b, in_regData1 32b,in_regData2  32b, in_sign_extended_offset 32b, in_rt 5b ,     in_rd 5b    ,out_WB 2b,  out_M 3b   ,out_branch_address 32b,out_zero_flag 1b,out_ALU_result 32b,out_reg_write_data 32,out_rd)
+execute (clk,ID_EX[1:0], ID_EX[4:2],ID_EX[8:5], ID_EX[40:9], ID_EX[72:41]   ,ID_EX[104:73]   ,   ID_EX[136:105]         ,ID_EX[141:137],ID_EX[146:142], EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102]);
 
+//mem(clk,in_WB 2b     ,  in_M 3b,  in_branch_address 32b,in_zero_flag 1b,in_ALU_result 32b,  in_reg_write_data 32b,   in_rd  5b    ,out_WB 2b ,out_ALU_result 32b,out_memory_word_read 32b,out_rd 5b);
+memory (clk,EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102],MEM_WB[1:0],    MEM_WB[33:2]  ,        MEM_WB[65:34]  ,MEM_WB[70:66]);
 
 endmodule
 
@@ -112,7 +114,7 @@ endmodule
 
 ////mem  stage//////////////
 module memory(clk,in_WB,in_M,in_branch_address,in_zero_flag,in_ALU_result,in_reg_write_data,in_rd,
-  out_ALU_result,out_memory_word_read,out_rd,out_WB);
+  out_WB,out_ALU_result,out_memory_word_read,out_rd);
 input clk;
 input [1:0] in_WB;
 input [2:0] in_M;
