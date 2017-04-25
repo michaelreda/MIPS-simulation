@@ -67,6 +67,7 @@ endmodule
 
 module execute(clk,in_WB,in_M,in_EX,in_incremented_PC,in_regData1,in_regData2,in_sign_extended_offset,in_rt,in_rd,
   out_WB,out_M,out_branch_address,out_zero_flag,out_ALU_result,out_reg_write_data,out_rd);
+input clk;
 input [1:0] in_WB;
 input [2:0] in_M;
 input [3:0] in_EX;
@@ -103,10 +104,9 @@ MUX_2to1 mux(out_rd,in_rt,in_rd,in_EX[1]);
 endmodule
 
 ////mem  stage//////////////
-
-module memory(clk,in_WB,in_M,in_branch_address,in_zero_flag,in_ALU_result,in_reg_write_data,in_rd,out_ALU_result,
-out_memory_word_read,out_rd,out_WB);
-
+module memory(clk,in_WB,in_M,in_branch_address,in_zero_flag,in_ALU_result,in_reg_write_data,in_rd,
+  out_ALU_result,out_memory_word_read,out_rd,out_WB);
+input clk;
 input [1:0] in_WB;
 input [2:0] in_M;
 input [31:0] in_branch_address,in_ALU_result,in_reg_write_data;
@@ -123,7 +123,7 @@ assign out_rd = in_rd;
 DataMemory(out_memory_word_read,in_ALU_result,in_reg_write_data,in_M[0],in_M[1]);
 
 reg PCSrc;
-and(PCSrc,in_zero_flag,in_M[2]);
+assign PCSrc = in_zero_flag & in_M[2];
 
 endmodule
 
