@@ -208,6 +208,7 @@ in_WB,in_ALU_result,in_memory_word_read,in_rd,out_writeData,out_rd
             "---writeBack Stage:--- OUTPUTS:\n out_writeData: %b \n",out_writeData,
             "out_rd: %d \n",out_rd
             );
+  end          
 endmodule
 
 ///test bench///////////////
