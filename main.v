@@ -80,7 +80,25 @@ output reg [4:0] out_rd;
 
 
 assign out_WB = in_WB;
+assign out_M = in_M;
+assign out_reg_write_data=in_regData2;
 
+reg [32:0] shifted_sign_extended_offset;
+ShiftLeft2Bits shifter(shifted_sign_extended_offset,in_sign_extended_offset)
+Adder32Bit adder(out_branch_address,in_incremented_PC,shifted_sign_extended_offset);
+
+reg[2:0] ALU_CTRL_output;
+ALU_CTRL(in_sign_extended_offset[5:0],in_EX[3:2],ALU_CTRL_output);
+
+
+reg[31:0] ALU_input2;
+MUX_2to1 mux(ALU_input2,in_regData2,in_sign_extended_offset,in_EX[0]);
+
+ALU(in_regData1,ALU_input2,out_ALU_result,ALU_CTRL_output,out_zero_flag );
+
+MUX_2to1 mux(out_rd,in_rt,in_rd,in_EX[1]);
+
+// $monitor("execState: instruction: %d read_address: %d ",instruction,read_address);
 
 endmodule
 
