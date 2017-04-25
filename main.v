@@ -70,7 +70,22 @@ endmodule
 
 ////mem  stage//////////////
 
-module mem();
+module memory(clk,in_WB,in_M,in_branch_address,in_zero_flag,in_ALU_result,in_reg_write_data,in_rd,out_ALU_result,
+out_memory_word_read,out_rd,out_WB);
+
+input [1:0] in_WB;
+input [2:0] in_M;
+input [31:0] in_branch_address,in_ALU_result,in_reg_write_data;
+input in_zero_flag;
+input [4:0] in_rd;
+
+output reg [31:0] out_ALU_result,out_memory_word_read;
+output reg [4:0] out_rd;
+output reg [1:0] out_WB;
+
+assign out_WB = in_WB;
+assign out_rd = in_rd;
+
 endmodule
 
 ///// write back stage//////
