@@ -1,18 +1,18 @@
 //////include components/////
 
-`include "Adder32Bit.v"
-`include "ALU.v"
-`include "ALU_CTRL.v"
-`include "Control.v"
-`include "DataMemory.v"
-`include "forwarding.v"
-`include "Instruction_memory.v"
-`include "MUX_2to1.v"
-`include "MUX_3x1.v"
-`include "RegisterFile.v"
-`include "ShiftLeft2Bits.v"
-`include "SignExtender_16to32.v"
-`include "TTbitReg.v"
+//`include "Adder32Bit.v"
+//`include "ALU.v"
+//`include "ALU_CTRL.v"
+//`include "Control.v"
+//`include "DataMemory.v"
+//`include "forwarding.v"
+//`include "Instruction_memory.v"
+//`include "MUX_2to1.v"
+//`include "MUX_3x1.v"
+//`include "RegisterFile.v"
+//`include "ShiftLeft2Bits.v"
+//`include "SignExtender_16to32.v"
+//`include "TTbitReg.v"
 
 //////main pipelined circuit////
 
@@ -86,33 +86,46 @@ endmodule
 
 /////decode stage////////////
 
-module decode( clk, regWrite, in_incremented_pc, in_instruction, in_data, in_writeToReg,
+module decode( clk, in_regWrite, in_incremented_pc, in_instruction, in_data, in_writeToReg,
               out_WB, out_M,out_EX,out_incremented_pc, out_data1, out_data2, out_extended, out_rt, out_rd );
 input clk,in_regWrite;
-input [31:0] in_instruction, in_data,;
+input [31:0] in_instruction, in_data,in_incremented_pc;
 input [3:0] in_writeToReg;
 output [1:0] out_WB;
 output [2:0] out_M;
 output [3:0] out_EX;
 output [31:0] out_incremented_pc, out_data1, out_data2, out_extended;
-output [4:0] out_rd, out_rt;
+output	 [4:0] out_rd, out_rt;
 
-wire op_code = instruction[5:0];
-wire into_extender = instruction[15:0];
-wire read1 = [10:6];
-wire read2 =[15:11];
+reg [1:0] out_WB;
+reg [2:0] out_M;
+reg [3:0] out_EX;
+reg [31:0] out_incremented_pc, out_data1, out_data2, out_extended;
+reg [4:0] out_rd, out_rt;
 
 
-assign out_incremented_pc = in_incremented_pc  ;
-assign out_rd = instruction[20:16];
-assign out_rt = instruction[15:11];
 
-assign
+
+wire op_code = in_instruction[5:0];
+wire into_extender = in_instruction[15:0];
+wire read1 = in_instruction[10:6];
+wire read2 =in_instruction[15:11];
+
+always @(posedge clk)
+begin
+ out_incremented_pc = in_incremented_pc  ;
+ out_rd = in_instruction[20:16];
+ out_rt = in_instruction[15:11];
+end
+
 
 Control main_crtl(clk,RegDst,Branch,MemRead,MemtoReg,ALUop,MemWrite,ALUsrc,RegWrite,op_code);
-assign out_WB = {RegWrite, MemtoReg};
-assign out_M  = {Branch, MemRead, MemWrite};
-assign out_EX = {RegDst ,ALUop, ALUsrc};
+always @(posedge clk)
+begin
+ out_WB = {RegWrite, MemtoReg};
+ out_M  = {Branch, MemRead, MemWrite};
+ out_EX = {RegDst ,ALUop, ALUsrc};
+end
 
 RegisterFile regfile(clk,in_regWrite, read1, read2, in_writeToReg, in_data, out_data1, out_data2 );
 SignExtender_16to32 se(out_extended, into_extender);
@@ -122,6 +135,7 @@ SignExtender_16to32 se(out_extended, into_extender);
 always @ (posedge clk)
 begin
 $monitor("---decode Stage:--- INPUTS:\n in_regWrite: %b \n",in_regWrite,
+		  "in_incremented_pc %d \n",in_incremented_pc,
           "in_instruction %b \n",in_instruction,
           "in_data %b \n",in_data,
           "in_writeToReg %d \n",in_writeToReg,
@@ -131,8 +145,8 @@ $monitor("---decode Stage:--- INPUTS:\n in_regWrite: %b \n",in_regWrite,
          "out_incremented_pc %d \n",out_incremented_pc,
           "out_data1 %d \n",out_data1,
           "out_data2 %d \n",out_data2,
-          "out_rd %d \n",out_rd
-          "out_rt %d \n",out_rt
+          "out_rd %d \n",out_rd,
+          "out_rt %d \n",out_rt,
           "out_extended %d \n",out_extended
           );
 end
@@ -151,16 +165,24 @@ input [2:0] in_M;
 input [3:0] in_EX;
 input [31:0] in_incremented_PC,in_regData1,in_regData2,in_sign_extended_offset;
 input [4:0] in_rt,in_rd;
-output reg [2:0] out_M;
-output reg [1:0] out_WB;
-output reg [31:0] out_branch_address,out_ALU_result,out_reg_write_data;
-output reg out_zero_flag;
-output reg [4:0] out_rd;
+output  [2:0] out_M;
+output  [1:0] out_WB;
+output  [31:0] out_branch_address,out_ALU_result,out_reg_write_data;
+output  out_zero_flag;
+output  [4:0] out_rd;
 
+ reg [2:0] out_M;
+ reg [1:0] out_WB;
+ reg [31:0] out_branch_address,out_ALU_result,out_reg_write_data;
+ reg out_zero_flag;
+ reg [4:0] out_rd;
 
-assign out_WB = in_WB;
-assign out_M = in_M;
-assign out_reg_write_data=in_regData2;
+always @(posedge clk)
+begin
+ out_WB = in_WB;
+ out_M = in_M;
+ out_reg_write_data=in_regData2;
+end
 
 reg [31:0] shifted_sign_extended_offset;
 ShiftLeft2Bits shifter(shifted_sign_extended_offset,in_sign_extended_offset);
@@ -209,21 +231,31 @@ input [31:0] in_branch_address,in_ALU_result,in_reg_write_data;
 input in_zero_flag;
 input [4:0] in_rd;
 
-output reg [31:0] out_ALU_result,out_memory_word_read;
-output reg [4:0] out_rd;
-output reg [1:0] out_WB;
-output reg PCSrc;
-output reg [31:0] out_branch_address;
+output  [31:0] out_ALU_result,out_memory_word_read;
+output  [4:0] out_rd;
+output  [1:0] out_WB;
+output  PCSrc;
+output  [31:0] out_branch_address;
 
-assign out_WB = in_WB;
-assign out_rd = in_rd;
-assign out_branch_address= in_branch_address;
+ reg [31:0] out_ALU_result,out_memory_word_read;
+ reg [4:0] out_rd;
+ reg [1:0] out_WB;
+ reg PCSrc;
+ reg [31:0] out_branch_address;
+
+ always @ (posedge clk)
+begin
+ out_WB = in_WB;
+ out_rd = in_rd;
+ out_branch_address= in_branch_address;
+end
 
 DataMemory(out_memory_word_read,in_ALU_result,in_reg_write_data,in_M[0],in_M[1]);
 
-
-assign PCSrc = in_zero_flag & in_M[2];
-
+ always @ (posedge clk)
+begin
+PCSrc = in_zero_flag & in_M[2];
+end
 
 always @ (posedge clk)
 begin
@@ -251,14 +283,20 @@ module writeBack(clk,in_WB,in_ALU_result,in_memory_word_read,in_rd,out_writeData
 	input [1:0] in_WB;
 	input [31:0] in_ALU_result,in_memory_word_read;
   input [4:0] in_rd;
-	output reg out_regWrite;
-	output reg [31:0] out_writeData, out_rd;
+	output  out_regWrite;
+	output  [31:0] out_writeData, out_rd;
+	
+	reg  out_regWrite;
+	reg  [31:0] out_writeData, out_rd;
 
-	assign out_rd = in_rd;
-  assign out_regWrite= in_WB[0];
+always @ (posedge clk)
+begin
+	 out_rd = in_rd;
+     out_regWrite= in_WB[0];
+end	 
 	MUX_2to1(out_writeData, in_ALU_result,in_memory_word_read, in_WB[1]);
 
-in_WB,in_ALU_result,in_memory_word_read,in_rd,out_writeData,out_rd
+
   always @ (posedge clk)
   begin
   $monitor("---writeBack Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
@@ -289,3 +327,6 @@ endmodule
 
 
 ////////////////////////////
+
+
+

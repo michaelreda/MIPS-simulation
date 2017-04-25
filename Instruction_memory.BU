@@ -18,7 +18,7 @@ initial registers[3] = 8'b00100100;
 
 always @(posedge clk)
 begin
-instruction[31:24] <= registers[read_address][7:0];
+instruction[31:24] = registers[read_address][7:0];
 instruction[23:16] <= registers[read_address+1][7:0];
 instruction[15:8] <= registers[read_address+2][7:0];
 instruction[7:0] <= registers[read_address+3][7:0];
