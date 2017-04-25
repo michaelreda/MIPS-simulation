@@ -1,13 +1,14 @@
-module Control(RegDst,Branch,MemRead,MemtoReg,ALUop,MemWrite,ALUsrc,RegWrite,opcode,clk);
+module Control(clk,RegDst,Branch,MemRead,MemtoReg,ALUop,MemWrite,ALUsrc,RegWrite,opcode);
 
 output RegDst,Branch,MemRead,MemtoReg,MemWrite,ALUsrc,RegWrite;
 reg RegDst,Branch,MemRead,MemtoReg,MemWrite,ALUsrc,RegWrite;
 output[2:0] ALUop;
 reg[2:0] ALUop;
 input[5:0] opcode;
+input clk;
 
 
-always @(opcode)
+always @(clk)
 begin
         //defaults
 		ALUop[2:0]	<= 3'b000;

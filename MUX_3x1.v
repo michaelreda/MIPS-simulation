@@ -1,9 +1,10 @@
-module MUX_3x1(out, in1 , in2, in3, select);
+module MUX_3x1(clk,out, in1 , in2, in3, select);
 input [31:0] in1, in2, in3;
   input [1:0] select;
   output [31:0]out;
   reg [31:0]out;
-  always @(in1 or in2 or in3 or select )
+  input clk;
+  always @(clk )
     begin 
       case(select)
           2'b00: out <= in1;

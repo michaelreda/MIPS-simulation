@@ -1,9 +1,10 @@
-module ShiftLeft2Bits(outData,inData);
+module ShiftLeft2Bits(clk,outData,inData);
   input [31:0]inData;
   output [31:0]outData;
   reg [31:0]outData;
+  input clk;
   
-  always@(inData)
+  always@(clk)
     begin
       outData = inData<<2;
     end

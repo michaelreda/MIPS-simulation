@@ -1,7 +1,8 @@
-module Instruction_memory(read_address, instruction);
+module Instruction_memory(clk,read_address, instruction);
 output  [31:0] instruction;
 reg   [31:0] instruction;
 input [31:0] read_address;
+input clk;
 
 
 reg [7:0] registers [255:0];
@@ -11,7 +12,7 @@ reg [7:0] registers [255:0];
 //initial registers[22] = 8'd0;
 //initial registers[23] = 8'd6;
 
-always @(read_address)
+always @(clk)
 begin
 instruction[31:24] <= registers[read_address][7:0];
 instruction[23:16] <= registers[read_address+1][7:0];
