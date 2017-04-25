@@ -208,12 +208,23 @@ in_WB,in_ALU_result,in_memory_word_read,in_rd,out_writeData,out_rd
             "---writeBack Stage:--- OUTPUTS:\n out_writeData: %b \n",out_writeData,
             "out_rd: %d \n",out_rd
             );
-  end          
+  end
 endmodule
 
 ///test bench///////////////
 
 module testbench();
+reg clk;
+
+initial begin
+  clk=0;
+  forever
+  #5 clk = ~clk;
+end
+
+main(clk);
+
+
 endmodule
 
 
