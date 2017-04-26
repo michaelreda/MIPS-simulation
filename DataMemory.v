@@ -32,34 +32,34 @@ end
 
 endmodule
 
-module tb5();
-
-	reg MemRead, MemWrite;
-	reg[31:0] inputAddress,inputData;
-	reg clk;
-	wire[31:0] outputData;
-
-	DataMemory test(clk,
-	outputData,
-	inputAddress,inputData,
-	MemRead, MemWrite);
-
-	initial begin
-		clk=0;
-		forever
-		#5 clk = ~clk;
-	end
-
-	initial begin
-
-		#10 inputAddress <= 5'd20; inputData<= 32'd 50;
-		#10 MemWrite <= 1'b1;
-		#10 MemRead <= 1'b1;MemWrite <= 1'b0;
-		#10 $finish;
-	end
-
-	initial
-		$monitor("time: %t outputData: %d inputAddress: %d ",$time,outputData,inputAddress);
-
-
-endmodule
+// module tb5();
+//
+// 	reg MemRead, MemWrite;
+// 	reg[31:0] inputAddress,inputData;
+// 	reg clk;
+// 	wire[31:0] outputData;
+//
+// 	DataMemory test(clk,
+// 	outputData,
+// 	inputAddress,inputData,
+// 	MemRead, MemWrite);
+//
+// 	initial begin
+// 		clk=0;
+// 		forever
+// 		#5 clk = ~clk;
+// 	end
+//
+// 	initial begin
+//
+// 		#10 inputAddress <= 5'd20; inputData<= 32'd 50;
+// 		#10 MemWrite <= 1'b1;
+// 		#10 MemRead <= 1'b1;MemWrite <= 1'b0;
+// 		#10 $finish;
+// 	end
+//
+// 	initial
+// 		$monitor("time: %t outputData: %d inputAddress: %d ",$time,outputData,inputAddress);
+//
+//
+// endmodule

@@ -30,35 +30,35 @@ module RegisterFile(clk,
 
 endmodule
 
-module tb10();
-	reg clk;
-	reg WB;
-	reg[4:0] readReg1,readReg2,writeReg;
-	reg[31:0] writeData;
-	wire[31:0] RegData1,RegData2;
-
-	RegisterFile test(clk,
-	WB,
-	readReg1,readReg2,writeReg,
-	writeData,
-	RegData1,RegData2);
-
-	initial begin
-		clk=0;
-		forever
-		#5 clk = ~clk;
-	end
-
-	initial begin
-		#5 readReg1 <= 5'd0;
-		#10 writeReg <= 5'd20;WB<=1; writeData<= 32'd 50;
-		#10 WB <=0;
-		#10 readReg2 <= 5'd20;
-		#5 $finish;
-	end
-
-	initial
-		$monitor("time: %t ReadData1: %d ReadData2: %d  clk: %d signal: %d",$time,RegData1,RegData2,clk,WB);
-
-
-endmodule
+// module tb10();
+// 	reg clk;
+// 	reg WB;
+// 	reg[4:0] readReg1,readReg2,writeReg;
+// 	reg[31:0] writeData;
+// 	wire[31:0] RegData1,RegData2;
+//
+// 	RegisterFile test(clk,
+// 	WB,
+// 	readReg1,readReg2,writeReg,
+// 	writeData,
+// 	RegData1,RegData2);
+//
+// 	initial begin
+// 		clk=0;
+// 		forever
+// 		#5 clk = ~clk;
+// 	end
+//
+// 	initial begin
+// 		#5 readReg1 <= 5'd0;
+// 		#10 writeReg <= 5'd20;WB<=1; writeData<= 32'd 50;
+// 		#10 WB <=0;
+// 		#10 readReg2 <= 5'd20;
+// 		#5 $finish;
+// 	end
+//
+// 	initial
+// 		$monitor("time: %t ReadData1: %d ReadData2: %d  clk: %d signal: %d",$time,RegData1,RegData2,clk,WB);
+//
+//
+// endmodule

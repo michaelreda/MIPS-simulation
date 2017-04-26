@@ -11,33 +11,33 @@ module ShiftLeft2Bits(clk,outData,inData);
 endmodule
 
 
-module test11();
-reg clk;
-reg [31:0] inData;
-wire [31:0] outData;
-
-ShiftLeft2Bits test(clk,outData,inData);
-
-
-initial begin
-		clk=0;
-		forever
-		#5 clk = ~clk;
-	end
-
-initial begin
-#0 inData <= 32'd70;
-#5 inData <= 32'd110;
-#10 inData <= 32'd12;
-
-
-#15 $finish;
-end
-
-
-initial
-		$monitor("time: %t inData: %b outData: %b",$time,inData,outData);
-
-
-
-endmodule
+// module test11();
+// reg clk;
+// reg [31:0] inData;
+// wire [31:0] outData;
+//
+// ShiftLeft2Bits test(clk,outData,inData);
+//
+//
+// initial begin
+// 		clk=0;
+// 		forever
+// 		#5 clk = ~clk;
+// 	end
+//
+// initial begin
+// #0 inData <= 32'd70;
+// #5 inData <= 32'd110;
+// #10 inData <= 32'd12;
+//
+//
+// #15 $finish;
+// end
+//
+//
+// initial
+// 		$monitor("time: %t inData: %b outData: %b",$time,inData,outData);
+//
+//
+//
+// endmodule

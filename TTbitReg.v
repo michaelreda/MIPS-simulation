@@ -13,35 +13,35 @@ module TTbitReg (clk,reset, in, out);
 endmodule
 
 
-module test13();
-reg clk,reset;
-reg [31:0] in;
-
-wire [31:0] out;
-
-TTbitReg test(clk,reset,in, out);
-
-initial begin
-		clk=0;
-		forever
-		#5 clk = ~clk;
-	end
-
-
-
-initial begin
-#0 in <= 32'd2;
-#0 reset <= 0;
-#5 reset <= 1;
-#5 reset <= 0;
-#5 in <= 32'd5;
-
-
-#15 $finish;
-end
-
-initial
-		$monitor("time: %t in: %d  out: %d ",$time,in,out);
-
-
-endmodule
+// module test13();
+// reg clk,reset;
+// reg [31:0] in;
+//
+// wire [31:0] out;
+//
+// TTbitReg test(clk,reset,in, out);
+//
+// initial begin
+// 		clk=0;
+// 		forever
+// 		#5 clk = ~clk;
+// 	end
+//
+//
+//
+// initial begin
+// #0 in <= 32'd2;
+// #0 reset <= 0;
+// #5 reset <= 1;
+// #5 reset <= 0;
+// #5 in <= 32'd5;
+//
+//
+// #15 $finish;
+// end
+//
+// initial
+// 		$monitor("time: %t in: %d  out: %d ",$time,in,out);
+//
+//
+// endmodule

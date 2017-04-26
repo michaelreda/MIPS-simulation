@@ -25,37 +25,37 @@ endcase
 end
 endmodule
 
-module test3();
-
-reg[31:0] x,y;
-reg[2:0] select;
-wire[31:0] res;
-wire zeroflag;
-
-
-initial begin
-x=10;
-y=5;
-select=3'd0;
-#10 $display("the result is:%d",res);
-$display("flag: %d",zeroflag);
-select=3'd1;
-#10 $display("the result is:%d",res);
-$display("flag: %d",zeroflag);
-x=5;
-select=3'd0;
-#30 $display("the result is:%d",res);
-$display("flag: %d",zeroflag);
-select=3'd6;
-x=1;
-#10 $display("the result is:%d",res);
-$display("flag: %d",zeroflag);
-select=3'd5;
-x=1;
-#10 $display("the result is:%d",res);
-$display("flag: %d",zeroflag);
-end
-
-ALU testing(clk,x,y,res,select,zeroflag);
-
-endmodule
+// module test3();
+//
+// reg[31:0] x,y;
+// reg[2:0] select;
+// wire[31:0] res;
+// wire zeroflag;
+//
+//
+// initial begin
+// x=10;
+// y=5;
+// select=3'd0;
+// #10 $display("the result is:%d",res);
+// $display("flag: %d",zeroflag);
+// select=3'd1;
+// #10 $display("the result is:%d",res);
+// $display("flag: %d",zeroflag);
+// x=5;
+// select=3'd0;
+// #30 $display("the result is:%d",res);
+// $display("flag: %d",zeroflag);
+// select=3'd6;
+// x=1;
+// #10 $display("the result is:%d",res);
+// $display("flag: %d",zeroflag);
+// select=3'd5;
+// x=1;
+// #10 $display("the result is:%d",res);
+// $display("flag: %d",zeroflag);
+// end
+//
+// ALU testing(clk,x,y,res,select,zeroflag);
+//
+// endmodule

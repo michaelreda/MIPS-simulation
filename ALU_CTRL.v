@@ -39,35 +39,35 @@ end
 endmodule
 
 
-
-
-module test2();
-reg [5:0] in;
-reg [2:0] alu_op;
-reg clk;
-wire [2:0] sel;
-
-
-ALU_CTRL test(clk,in, alu_op, sel);
-
-initial begin
-		clk=0;
-		forever
-		#5 clk = ~clk;
-	end
-initial begin
-#0 alu_op <= 3'd0;
-#0 in <= 6'h20;
-#5 in <= 6'h22;
-#10 in <= 6'h24;
-#15 in <= 6'h25;
-#20 in <= 6'h0;
-#25 in <= 6'h2;
-#30 in <= 6'h2A;
-#35 $finish;
-end
-
-
-initial
-		$monitor("time: %t in: %h alu_op: %h  sel: %d",$time,in,alu_op,sel);
-endmodule
+//
+//
+// module test2();
+// reg [5:0] in;
+// reg [2:0] alu_op;
+// reg clk;
+// wire [2:0] sel;
+//
+//
+// ALU_CTRL test(clk,in, alu_op, sel);
+//
+// initial begin
+// 		clk=0;
+// 		forever
+// 		#5 clk = ~clk;
+// 	end
+// initial begin
+// #0 alu_op <= 3'd0;
+// #0 in <= 6'h20;
+// #5 in <= 6'h22;
+// #10 in <= 6'h24;
+// #15 in <= 6'h25;
+// #20 in <= 6'h0;
+// #25 in <= 6'h2;
+// #30 in <= 6'h2A;
+// #35 $finish;
+// end
+//
+//
+// initial
+// 		$monitor("time: %t in: %h alu_op: %h  sel: %d",$time,in,alu_op,sel);
+// endmodule

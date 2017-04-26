@@ -26,28 +26,28 @@ instruction[7:0] <= registers[read_address+3][7:0];
 end
 endmodule
 
-module tb7();
-
-	reg [31:0] read_address;
-	reg clk;
-	wire[31:0] instruction;
-
-	Instruction_memory test(clk,read_address, instruction);
-
-	initial begin
-		clk=0;
-		forever
-		#5 clk = ~clk;
-	end
-
-	initial begin
-
-		#10 read_address <= 5'd20;
-		#10 $finish;
-	end
-
-	initial
-		$monitor("time: %t instruction: %d read_address: %d ",$time,instruction,read_address);
-
-
-endmodule
+// module tb7();
+//
+// 	reg [31:0] read_address;
+// 	reg clk;
+// 	wire[31:0] instruction;
+//
+// 	Instruction_memory test(clk,read_address, instruction);
+//
+// 	initial begin
+// 		clk=0;
+// 		forever
+// 		#5 clk = ~clk;
+// 	end
+//
+// 	initial begin
+//
+// 		#10 read_address <= 5'd20;
+// 		#10 $finish;
+// 	end
+//
+// 	initial
+// 		$monitor("time: %t instruction: %d read_address: %d ",$time,instruction,read_address);
+//
+//
+// endmodule
