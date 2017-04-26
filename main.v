@@ -18,10 +18,10 @@
 
 module main(clk);
 input clk;
-reg [63:0] IF_ID;
-reg [146:0] ID_EX;
-reg [106:0] EX_MEM;
-reg [70:0] MEM_WB;
+wire [63:0] IF_ID;
+wire [146:0] ID_EX;
+wire [106:0] EX_MEM;
+wire [70:0] MEM_WB;
 
 //outputs from writeback stage
 wire[31:0] out_writeData;
@@ -54,7 +54,7 @@ module fetch(clk, in_branch , in_branchSel, out_instruction, out_incremented_pc 
 input clk, in_branchSel;
 input [31:0] in_branch;
 output [31:0] out_instruction, out_incremented_pc ;
-reg [31:0]  out_instruction, out_incremented_pc;
+//reg [31:0]  out_instruction, out_incremented_pc;
 
 wire [31:0] mux_out, pc_out;
 
@@ -98,7 +98,8 @@ output	 [4:0] out_rd, out_rt;
 reg [1:0] out_WB;
 reg [2:0] out_M;
 reg [3:0] out_EX;
-reg [31:0] out_incremented_pc, out_data1, out_data2, out_extended;
+//reg [31:0] out_incremented_pc, out_data1, out_data2, out_extended;
+reg [31:0] out_incremented_pc;
 reg [4:0] out_rd, out_rt;
 
 
@@ -126,7 +127,7 @@ begin
 end
 
 RegisterFile regfile(clk,in_regWrite, read1, read2, in_writeToReg, in_data, out_data1, out_data2 );
-SignExtender_16to32 se(out_extended, into_extender);
+SignExtender_16to32 se(clk,out_extended, into_extender);
 
 
 
@@ -169,11 +170,12 @@ output  [31:0] out_branch_address,out_ALU_result,out_reg_write_data;
 output  out_zero_flag;
 output  [4:0] out_rd;
 
- reg [2:0] out_M;
- reg [1:0] out_WB;
- reg [31:0] out_branch_address,out_ALU_result,out_reg_write_data;
- reg out_zero_flag;
- reg [4:0] out_rd;
+  reg [2:0] out_M;
+  reg [1:0] out_WB;
+  //reg [31:0] out_branch_address,out_ALU_result,out_reg_write_data;
+  reg [31:0] out_reg_write_data;
+  //reg out_zero_flag;
+//  reg [4:0] out_rd;
 
 always @(posedge clk)
 begin
@@ -182,20 +184,20 @@ begin
  out_reg_write_data=in_regData2;
 end
 
-reg [31:0] shifted_sign_extended_offset;
-ShiftLeft2Bits shifter(shifted_sign_extended_offset,in_sign_extended_offset);
-Adder32Bit adder(out_branch_address,in_incremented_PC,shifted_sign_extended_offset);
+wire [31:0] shifted_sign_extended_offset;
+ShiftLeft2Bits shifter(clk,shifted_sign_extended_offset,in_sign_extended_offset);
+Adder32Bit adder(clk,out_branch_address,in_incremented_PC,shifted_sign_extended_offset);
 
-reg[2:0] ALU_CTRL_output;
-ALU_CTRL ctrl(in_sign_extended_offset[5:0],in_EX[3:2],ALU_CTRL_output);
+wire[2:0] ALU_CTRL_output;
+ALU_CTRL ctrl(clk,in_sign_extended_offset[5:0],in_EX[3:2],ALU_CTRL_output);
 
 
-reg[31:0] ALU_input2;
-MUX_2to1 mux1(ALU_input2,in_regData2,in_sign_extended_offset,in_EX[0]);
+wire[31:0] ALU_input2;
+MUX_2to1 mux1(clk,ALU_input2,in_regData2,in_sign_extended_offset,in_EX[0]);
 
-ALU alu(in_regData1,ALU_input2,out_ALU_result,ALU_CTRL_output,out_zero_flag );
+ALU alu(clk,in_regData1,ALU_input2,out_ALU_result,ALU_CTRL_output,out_zero_flag );
 
-MUX_2to1 mux2(out_rd,in_rt,in_rd,in_EX[1]);
+MUX_2to1 mux2(clk,out_rd,in_rt,in_rd,in_EX[1]);
 
 always @ (posedge clk)
 begin
@@ -235,7 +237,8 @@ output  [1:0] out_WB;
 output  PCSrc;
 output  [31:0] out_branch_address;
 
- reg [31:0] out_ALU_result,out_memory_word_read;
+// reg [31:0] out_ALU_result,out_memory_word_read;
+reg [31:0] out_ALU_result;
  reg [4:0] out_rd;
  reg [1:0] out_WB;
  reg PCSrc;
@@ -248,7 +251,7 @@ begin
  out_branch_address= in_branch_address;
 end
 
-DataMemory d(out_memory_word_read,in_ALU_result,in_reg_write_data,in_M[0],in_M[1]);
+DataMemory d(clk,out_memory_word_read,in_ALU_result,in_reg_write_data,in_M[0],in_M[1]);
 
  always @ (posedge clk)
 begin
@@ -283,16 +286,17 @@ module writeBack(clk,in_WB,in_ALU_result,in_memory_word_read,in_rd,out_writeData
   input [4:0] in_rd;
 	output  out_regWrite;
 	output  [31:0] out_writeData, out_rd;
-	
+
 	reg  out_regWrite;
-	reg  [31:0] out_writeData, out_rd;
+//	reg  [31:0] out_writeData, out_rd;
+	reg  [31:0]  out_rd;
 
 always @ (posedge clk)
 begin
 	 out_rd = in_rd;
      out_regWrite= in_WB[0];
-end	 
-	MUX_2to1 m(out_writeData, in_ALU_result,in_memory_word_read, in_WB[1]);
+end
+	MUX_2to1 m(clk,out_writeData, in_ALU_result,in_memory_word_read, in_WB[1]);
 
 
   always @ (posedge clk)
@@ -325,6 +329,3 @@ endmodule
 
 
 ////////////////////////////
-
-
-

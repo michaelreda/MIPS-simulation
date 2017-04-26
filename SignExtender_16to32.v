@@ -28,6 +28,6 @@ inData=0 - 16'd323;
 #10 $display("the inData is:%b outData is:%b",inData,outData);
 end
 
-SignExtender_16to32 testing(outData,inData);
+SignExtender_16to32 testing(clk,outData,inData);
 
 endmodule

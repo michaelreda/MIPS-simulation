@@ -56,6 +56,6 @@ x=1;
 $display("flag: %d",zeroflag);
 end
 
-ALU testing(x,y,res,select,zeroflag);
+ALU testing(clk,x,y,res,select,zeroflag);
 
 endmodule
