@@ -7,19 +7,19 @@ input clk;
 
 reg [7:0] registers [255:0];
 
-//lw $t2,4($0)
-//1000 1100 0000 1010 0000 0000 0000 0100
-// initial registers[0] = 8'b1000_1100;
-// initial registers[1] = 8'b0000_1010;
-// initial registers[2] = 8'b0000_0000;
-// initial registers[3] = 8'b0000_0100;
+//lw $t5,1($0)
+//1000 1100 0000 1101 0000 0000 0000 0001
+initial registers[0] = 8'b1000_1100;
+initial registers[1] = 8'b0000_1101;
+initial registers[2] = 8'b0000_0000;
+initial registers[3] = 8'b0000_0001;
 
 //sw $t2,4($0)
 //1010 1100 0000 1010 0000 0000 0000 0100
-initial registers[0] = 8'b1010_1100;
-initial registers[1] = 8'b0000_1010;
-initial registers[2] = 8'b0000_0000;
-initial registers[3] = 8'b0000_0100;
+// initial registers[0] = 8'b1010_1100;
+// initial registers[1] = 8'b0000_1010;
+// initial registers[2] = 8'b0000_0000;
+// initial registers[3] = 8'b0000_0100;
 
 // initial registers[0] = 8'b00000001;
 // initial registers[1] = 8'b01001011;
