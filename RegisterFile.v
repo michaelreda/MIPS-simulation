@@ -18,8 +18,16 @@ module RegisterFile(clk,
 	initial registersArray[10] = 32'd3; //t2 = 3
 	initial registersArray[11] = 32'd4; //t3 = 4
 
-	always@(posedge clk)
-	    $display("OUTPUT----------------------------> %d",registersArray[9]);
+
+// 	always@(posedge clk)
+// 	    $display("OUTPUT----------------------------> %d",registersArray[9]);
+
+	reg[31:0] i;
+	initial fork
+        #96 $display("---------Register File---------");
+        #97 for( i = 0; i < 32; i++ )
+               $display("%d  ::  %b",i,registersArray[i]);
+    join
 
 
 	always @(posedge clk)

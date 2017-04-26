@@ -8,6 +8,13 @@ input MemRead, MemWrite, clk;
 reg [7:0]memory[255:0]; //memory //check about size !
 
 
+reg[255:0] i;
+initial fork
+    #98 $display("---------Memory Data---------");
+    #99 for( i = 0; i < 256; i++ )
+           $display("%d  ::  %b",i,memory[i]);
+join
+
 always @(posedge clk )
 begin
 	if(MemWrite==1)

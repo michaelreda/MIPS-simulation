@@ -7,10 +7,15 @@ input clk;
 
 reg [7:0] registers [255:0];
 
-initial registers[0] = 8'b00000001;
-initial registers[1] = 8'b01001011;
-initial registers[2] = 8'b01001000;
-initial registers[3] = 8'b00100000;
+// initial registers[0] = 8'b00000001;
+// initial registers[1] = 8'b01001011;
+// initial registers[2] = 8'b01001000;
+// initial registers[3] = 8'b00100000;
+
+// initial registers[4] = 8'b00000001;
+// initial registers[5] = 8'b01101001;
+// initial registers[6] = 8'b01001000;
+// initial registers[7] = 8'b00100000;
 
 // initial registers[7:4] = 8'd0;
 // initial registers[11:8] = 8'd0;
