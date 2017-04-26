@@ -10,7 +10,7 @@ module RegisterFile(clk,
 	input[31:0] writeData;
 	output[31:0] RegData1,RegData2;
 	reg[31:0]RegData1,RegData2;
-	reg[31:0]registersArray[4:0];
+	reg[31:0]registersArray[31:0];
 	initial registersArray[0] = 32'd0;
 
 	//𝑎𝑛𝑑 $𝑡1, $𝑡2, $𝑡3 000000 01010 01011 01001 00000
