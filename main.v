@@ -69,8 +69,8 @@ end
 
 fetch f(clk,out_branch_address,PCSrc,IF_ID[31:0], IF_ID[63:32]);
 
-
-decode d(clk, out_regWrite, IF_ID[63:32], IF_ID[31:0],out_writeData,out_rd,  ID_EX[1:0], ID_EX[4:2],ID_EX[9:5], ID_EX[41:10], ID_EX[73:42]   ,ID_EX[105:74]   , ID_EX[137:106],ID_EX[142:138],ID_EX[147:143]);
+//       clk, in_regWrite , in_incremented_pc,in_instruction, in_data,   in_writeToReg,  out_WB,   out_M,out_EX  ,out_incremented_pc, out_data1,    out_data2,     out_extended,       out_rt,         out_rd
+decode d(clk, out_regWrite, IF_ID[63:32]       , IF_ID[31:0],out_writeData   ,out_rd,    ID_EX[1:0], ID_EX[4:2],      ID_EX[9:5],     ID_EX[41:10], ID_EX[73:42]   ,ID_EX[105:74]   , ID_EX[137:106],ID_EX[142:138],ID_EX[147:143]);
 
 //exec  ( clk, WB 2b   , M 3b      ,EXE 4b    , incPC 32b, in_regData1 32b,in_regData2  32b, in_sign_extended_offset 32b, in_rt 5b ,     in_rd 5b    ,out_WB 2b,  out_M 3b   ,out_branch_address 32b,out_zero_flag 1b,out_ALU_result 32b,out_reg_write_data 32,out_rd)
 execute e(clk,ID_EX[1:0], ID_EX[4:2],ID_EX[9:5], ID_EX[41:10], ID_EX[73:42]   ,ID_EX[105:74]   ,   ID_EX[137:106]         ,ID_EX[142:138],ID_EX[147:143], EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102]);
@@ -197,18 +197,18 @@ wire [2:0] ALUop;
 Control main_crtl(clk,RegDst,Branch,MemRead,MemtoReg,ALUop,MemWrite,ALUsrc,RegWrite,op_code);
 always @(posedge clk)
 begin
- out_WB = {RegWrite, MemtoReg};
- out_M  = {Branch, MemRead, MemWrite};
- out_EX = {RegDst ,ALUop, ALUsrc};
+ out_WB = { MemtoReg,RegWrite};
+ out_M  = {Branch , MemWrite,MemRead};
+ out_EX = {ALUop ,RegDst ,ALUsrc};
 end
 
 always @ (posedge clk)
 begin
-$display("in_regWrite %d, rs %d, read2 %d, in_writeToReg %d, in_data %d, out_data1 %d, out_data2 %d", in_regWrite, rs, read2, in_writeToReg, in_data, out_data1, out_data2);
+$display("in_regWrite %d,RegDst %d, rs %d, out_rt %d, in_writeToReg %d, in_data %d, out_data1 %d, out_data2 %d", in_regWrite,RegDst, rs, out_rt, in_writeToReg, in_data, out_data1, out_data2);
 end
 
-MUX_2to1_5b regFileread2 (clk,read2,out_rt,out_rd,RegDst);
-RegisterFile regfile(clk,in_regWrite, rs, read2, in_writeToReg, in_data, out_data1, out_data2 );
+// MUX_2to1_5b regFileread2 (clk,read2,out_rt,out_rd,RegDst);
+RegisterFile regfile(clk,in_regWrite, rs, out_rt, in_writeToReg, in_data, out_data1, out_data2 );
 SignExtender_16to32 se(clk,out_extended, into_extender);
 
 
@@ -283,6 +283,7 @@ MUX_2to1_5b mux2(clk,out_rd,in_rt,in_rd,in_EX[1]);
 
 always @ (posedge clk)
 begin
+// $display("********************* regDst %d , out_rd %d",in_EX[1],out_rd);
 $display("---execute Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
           "in_M %b \n",in_M,
           "in_EX %b \n",in_EX,
