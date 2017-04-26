@@ -175,7 +175,7 @@ reg [4:0] out_rd, out_rt,rs;
 
 
 
-wire [5:0] op_code = in_instruction[5:0];
+wire [5:0] op_code = in_instruction[31:26];
 wire [15:0] into_extender = in_instruction[15:0];
 // wire [4:0] read1 = in_instruction[25:21];
 // wire [4:0] read2 =in_instruction[15:11];
@@ -186,7 +186,7 @@ wire [4:0] read2;
 
 always @(posedge clk)
 begin
- out_incremented_pc = in_incremented_pc  ;
+    out_incremented_pc = in_incremented_pc  ;
     out_rd = in_instruction[15:11];
     out_rt = in_instruction[20:16];
     rs= in_instruction[25:21];
@@ -194,6 +194,10 @@ begin
 end
 
 wire [2:0] ALUop;
+always @ (posedge clk)
+begin
+$display("Control Signals: RegDst %d,Branch %d,MemRead %d,MemtoReg %d ,ALUop %b ,MemWrite %d, ALUsrc %d ,RegWrite %d,op_code %h",RegDst,Branch,MemRead,MemtoReg,ALUop,MemWrite,ALUsrc,RegWrite,op_code);
+end
 Control main_crtl(clk,RegDst,Branch,MemRead,MemtoReg,ALUop,MemWrite,ALUsrc,RegWrite,op_code);
 always @(posedge clk)
 begin
@@ -204,7 +208,7 @@ end
 
 always @ (posedge clk)
 begin
-$display("in_regWrite %d,RegDst %d, rs %d, out_rt %d, in_writeToReg %d, in_data %d, out_data1 %d, out_data2 %d", in_regWrite,RegDst, rs, out_rt, in_writeToReg, in_data, out_data1, out_data2);
+//$display("in_regWrite %d,RegDst %d, rs %d, out_rt %d, in_writeToReg %d, in_data %d, out_data1 %d, out_data2 %d", in_regWrite,RegDst, rs, out_rt, in_writeToReg, in_data, out_data1, out_data2);
 end
 
 // MUX_2to1_5b regFileread2 (clk,read2,out_rt,out_rd,RegDst);
