@@ -31,6 +31,21 @@ wire out_regWrite;
 //outputs from Memory stage
 wire PCSrc;
 wire [31:0]out_branch_address;
+//reg [31:0] out_branch_address_reg;
+
+//assign out_branch_address = (out_branch_address == 32'bx)? 32'b0:out_branch_address;
+
+// always @(posedge clk)
+// begin
+//     if(out_branch_address == 32'bx)
+//         begin
+//       $display("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+//         out_branch_address_reg= 32'b0;
+//       end
+//     else
+//         out_branch_address_reg=out_branch_address;
+
+// end
 
 // $monitor("---clk : --- \n IF_ID %b \n",IF_ID,
 //           "ID_EX %b \n",ID_EX,
@@ -64,12 +79,33 @@ output [31:0] out_instruction, out_incremented_pc ;
 //reg [31:0]  out_instruction, out_incremented_pc;
 
 wire [31:0] mux_out, pc_out;
+reg PCSrc;
+reg [31:0] in_branchreg;
+
+always@(posedge clk)
+begin
+    if(in_branchSel == 1'bX)
+        PCSrc = 1'b0;
+    else
+        PCSrc=in_branchSel;
+
+    if(in_branch[0] == 1'bX)
+        in_branchreg= 32'b0;
+    else
+        in_branchreg=in_branch;
+end
+
 
 
 //initial PC = 32'd40;
 
-MUX_2to1 pc_update(clk,mux_out, out_incremented_pc , in_branch, in_branchSel);
-reg reset=0;
+MUX_2to1 pc_update(clk,mux_out, out_incremented_pc , in_branchreg, PCSrc);
+reg reset;
+always@(posedge clk)
+begin
+    if(reset === 1'bX)
+     reset=1;
+ end
 TTbitReg PC (clk,reset, mux_out, pc_out);
 Instruction_memory IM(clk,pc_out, out_instruction);
 Adder32Bit pc_increment(clk,out_incremented_pc,pc_out, 32'd4);
@@ -77,9 +113,11 @@ Adder32Bit pc_increment(clk,out_incremented_pc,pc_out, 32'd4);
 always @ (posedge clk)
 begin
 $monitor("---fetch Stage:--- INPUTS:\n in_branchSel: %b \n",in_branchSel,
+          "PCSrc %b \n",PCSrc,
           "in_branch %b \n",in_branch,
-          "---fetch Stage:--- OUTPUTS:\n out_instruction %b \n",out_instruction,
-         "out_instruction %d \n",out_instruction,
+          "in_branchreg %b \n",in_branchreg,
+          "reset %b \n",reset,
+          "---fetch Stage:--- OUTPUTS:\nout_instruction %b \n",out_instruction,
           "out_incremented_pc %d \n",out_incremented_pc,
           );
 end
