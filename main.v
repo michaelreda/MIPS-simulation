@@ -30,7 +30,14 @@ wire out_regWrite;
 
 //outputs from Memory stage
 wire PCSrc;
-wire out_branch_address;
+wire [31:0]out_branch_address;
+
+// $monitor("---clk : --- \n IF_ID %b \n",IF_ID,
+//           "ID_EX %b \n",ID_EX,
+//           "EX_MEM %b \n",EX_MEM,
+//           "MEM_WB %b \n",MEM_WB
+//           );
+
 
 fetch f(clk,out_branch_address,PCSrc,IF_ID[31:0], IF_ID[63:32]);
 
@@ -62,7 +69,8 @@ wire [31:0] mux_out, pc_out;
 //initial PC = 32'd40;
 
 MUX_2to1 pc_update(clk,mux_out, out_incremented_pc , in_branch, in_branchSel);
-TTbitReg PC (clk,32'b0, mux_out, pc_out);
+reg reset=0;
+TTbitReg PC (clk,reset, mux_out, pc_out);
 Instruction_memory IM(clk,pc_out, out_instruction);
 Adder32Bit pc_increment(clk,out_incremented_pc,pc_out, 32'd4);
 
@@ -88,7 +96,7 @@ module decode( clk, in_regWrite, in_incremented_pc, in_instruction, in_data, in_
               out_WB, out_M,out_EX,out_incremented_pc, out_data1, out_data2, out_extended, out_rt, out_rd );
 input clk,in_regWrite;
 input [31:0] in_instruction, in_data,in_incremented_pc;
-input [3:0] in_writeToReg;
+input [4:0] in_writeToReg;//edited to 5 bits by tweety
 output [1:0] out_WB;
 output [2:0] out_M;
 output [3:0] out_EX;
@@ -105,10 +113,10 @@ reg [4:0] out_rd, out_rt;
 
 
 
-wire op_code = in_instruction[5:0];
-wire into_extender = in_instruction[15:0];
-wire read1 = in_instruction[10:6];
-wire read2 =in_instruction[15:11];
+wire [5:0] op_code = in_instruction[5:0];
+wire [15:0] into_extender = in_instruction[15:0];
+wire [4:0] read1 = in_instruction[10:6];
+wire [4:0] read2 =in_instruction[15:11];
 
 always @(posedge clk)
 begin
@@ -117,7 +125,7 @@ begin
  out_rt = in_instruction[15:11];
 end
 
-
+wire [2:0] ALUop;
 Control main_crtl(clk,RegDst,Branch,MemRead,MemtoReg,ALUop,MemWrite,ALUsrc,RegWrite,op_code);
 always @(posedge clk)
 begin
