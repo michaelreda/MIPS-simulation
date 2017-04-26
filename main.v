@@ -19,7 +19,7 @@
 module main(clk);
 input clk;
 wire [63:0] IF_ID;
-wire [146:0] ID_EX;
+wire [147:0] ID_EX;
 wire [106:0] EX_MEM;
 wire [70:0] MEM_WB;
 
@@ -42,10 +42,10 @@ wire [31:0]out_branch_address;
 fetch f(clk,out_branch_address,PCSrc,IF_ID[31:0], IF_ID[63:32]);
 
 
-decode d(clk, out_regWrite, IF_ID[63:32], IF_ID[31:0],out_writeData,out_rd,  ID_EX[1:0], ID_EX[4:2],ID_EX[8:5], ID_EX[40:9], ID_EX[72:41]   ,ID_EX[104:73]   , ID_EX[136:105],ID_EX[141:137],ID_EX[146:142]);
+decode d(clk, out_regWrite, IF_ID[63:32], IF_ID[31:0],out_writeData,out_rd,  ID_EX[1:0], ID_EX[4:2],ID_EX[9:5], ID_EX[41:10], ID_EX[73:42]   ,ID_EX[105:74]   , ID_EX[137:106],ID_EX[142:138],ID_EX[147:143]);
 
 //exec  ( clk, WB 2b   , M 3b      ,EXE 4b    , incPC 32b, in_regData1 32b,in_regData2  32b, in_sign_extended_offset 32b, in_rt 5b ,     in_rd 5b    ,out_WB 2b,  out_M 3b   ,out_branch_address 32b,out_zero_flag 1b,out_ALU_result 32b,out_reg_write_data 32,out_rd)
-execute e(clk,ID_EX[1:0], ID_EX[4:2],ID_EX[8:5], ID_EX[40:9], ID_EX[72:41]   ,ID_EX[104:73]   ,   ID_EX[136:105]         ,ID_EX[141:137],ID_EX[146:142], EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102]);
+execute e(clk,ID_EX[1:0], ID_EX[4:2],ID_EX[9:5], ID_EX[41:10], ID_EX[73:42]   ,ID_EX[105:74]   ,   ID_EX[137:106]         ,ID_EX[142:138],ID_EX[147:143], EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102]);
 
 //mem(clk,in_WB 2b     ,  in_M 3b,  in_branch_address 32b,in_zero_flag 1b,in_ALU_result 32b,  in_reg_write_data 32b,   in_rd  5b    ,out_WB 2b ,out_ALU_result 32b,out_memory_word_read 32b,out_rd 5b);
 memory m(clk,EX_MEM[1:0], EX_MEM[4:2],    EX_MEM[36:5]     , EX_MEM[37]   ,     EX_MEM[69:38] ,      EX_MEM[101:70] , EX_MEM[106:102],MEM_WB[1:0],    MEM_WB[33:2]  ,        MEM_WB[65:34]  ,MEM_WB[70:66], PCSrc,out_branch_address);
@@ -99,13 +99,13 @@ input [31:0] in_instruction, in_data,in_incremented_pc;
 input [4:0] in_writeToReg;//edited to 5 bits by tweety
 output [1:0] out_WB;
 output [2:0] out_M;
-output [3:0] out_EX;
+output [4:0] out_EX;
 output [31:0] out_incremented_pc, out_data1, out_data2, out_extended;
 output	 [4:0] out_rd, out_rt;
 
 reg [1:0] out_WB;
 reg [2:0] out_M;
-reg [3:0] out_EX;
+reg [4:0] out_EX;
 //reg [31:0] out_incremented_pc, out_data1, out_data2, out_extended;
 reg [31:0] out_incremented_pc;
 reg [4:0] out_rd, out_rt;
@@ -169,7 +169,7 @@ module execute(clk,in_WB,in_M,in_EX,in_incremented_PC,in_regData1,in_regData2,in
 input clk;
 input [1:0] in_WB;
 input [2:0] in_M;
-input [3:0] in_EX;
+input [4:0] in_EX;
 input [31:0] in_incremented_PC,in_regData1,in_regData2,in_sign_extended_offset;
 input [4:0] in_rt,in_rd;
 output  [2:0] out_M;
@@ -197,7 +197,7 @@ ShiftLeft2Bits shifter(clk,shifted_sign_extended_offset,in_sign_extended_offset)
 Adder32Bit adder(clk,out_branch_address,in_incremented_PC,shifted_sign_extended_offset);
 
 wire[2:0] ALU_CTRL_output;
-ALU_CTRL ctrl(clk,in_sign_extended_offset[5:0],in_EX[3:2],ALU_CTRL_output);
+ALU_CTRL ctrl(clk,in_sign_extended_offset[5:0],in_EX[4:2],ALU_CTRL_output);
 
 
 wire[31:0] ALU_input2;
