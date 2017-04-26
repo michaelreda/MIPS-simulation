@@ -10,8 +10,18 @@ module RegisterFile(clk,
 	input[31:0] writeData;
 	output[31:0] RegData1,RegData2;
 	reg[31:0]RegData1,RegData2;
-	reg[31:0]registersArray[31:0];
+	reg[31:0]registersArray[4:0];
 	initial registersArray[0] = 32'd0;
+
+	//𝑎𝑛𝑑 $𝑡1, $𝑡2, $𝑡3 000000 01010 01011 01001 00000
+	initial registersArray[9] = 32'd5; //t1 = 5
+	initial registersArray[10] = 32'd3; //t2 = 3
+	initial registersArray[11] = 32'd4; //t3 = 4
+
+	always@(posedge clk)
+	    $display("OUTPUT----------------------------> %d",registersArray[9]);
+
+
 	always @(posedge clk)
 	begin
 		RegData1 <= (readReg1==0)?32'b0:registersArray[readReg1];

@@ -95,8 +95,19 @@ wire [31:0] mux_out, pc_out;
 reg PCSrc;
 reg [31:0] in_branchreg;
 
+reg[31:0] out_incremented_pc_prev;
+reg [1:0] first_cycle = 2'b11;
+
 always@(posedge clk)
 begin
+    // if(first_cycle != 0)
+    //     first_cycle=first_cycle-1;
+    // else
+    //     out_incremented_pc_prev=out_incremented_pc;
+
+    // if(out_incremented_pc_prev==out_incremented_pc && first_cycle==0) //halting condition if PC didn't change
+    //     $finish;
+
     if(in_branchSel == 1'bX)
         PCSrc = 1'b0;
     else
@@ -125,7 +136,7 @@ Adder32Bit pc_increment(clk,out_incremented_pc,pc_out, 32'd4);
 
 always @ (posedge clk)
 begin
-$monitor("---fetch Stage:--- INPUTS:\n in_branchSel: %b \n",in_branchSel,
+$display("---fetch Stage:--- INPUTS:\n in_branchSel: %b \n",in_branchSel,
           "PCSrc %b \n",PCSrc,
           "in_branch %b \n",in_branch,
           "in_branchreg %b \n",in_branchreg,
@@ -185,6 +196,7 @@ begin
  out_EX = {RegDst ,ALUop, ALUsrc};
 end
 
+$display("in_regWrite %d, read1 %d, read2 %d, in_writeToReg %d, in_data %d, out_data1 %d, out_data2 %d", in_regWrite, read1, read2, in_writeToReg, in_data, out_data1, out_data2);
 RegisterFile regfile(clk,in_regWrite, read1, read2, in_writeToReg, in_data, out_data1, out_data2 );
 SignExtender_16to32 se(clk,out_extended, into_extender);
 
@@ -192,7 +204,7 @@ SignExtender_16to32 se(clk,out_extended, into_extender);
 
 always @ (posedge clk)
 begin
-$monitor("---decode Stage:--- INPUTS:\n in_regWrite: %b \n",in_regWrite,
+$display("---decode Stage:--- INPUTS:\n in_regWrite: %b \n",in_regWrite,
 		  "in_incremented_pc %d \n",in_incremented_pc,
           "in_instruction %b \n",in_instruction,
           "in_data %b \n",in_data,
@@ -205,7 +217,7 @@ $monitor("---decode Stage:--- INPUTS:\n in_regWrite: %b \n",in_regWrite,
           "out_data2 %d \n",out_data2,
           "out_rd %d \n",out_rd,
           "out_rt %d \n",out_rt,
-          "out_extended %d \n",out_extended
+          "out_extended %b \n",out_extended
           );
 end
 
@@ -260,7 +272,7 @@ MUX_2to1_5b mux2(clk,out_rd,in_rt,in_rd,in_EX[1]);
 
 always @ (posedge clk)
 begin
-$monitor("---execute Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
+$display("---execute Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
           "in_M %b \n",in_M,
           "in_EX %b \n",in_EX,
           "in_incremented_PC %d \n",in_incremented_PC,
@@ -319,7 +331,7 @@ end
 
 always @ (posedge clk)
 begin
-$monitor("---Memory Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
+$display("---Memory Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
           "in_M: %b \n",in_M,
           "in_branch_address: %d \n",in_branch_address,
           "in_zero_flag: %d \n",in_zero_flag,
@@ -361,7 +373,7 @@ end
 
   always @ (posedge clk)
   begin
-  $monitor("---writeBack Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
+  $display("---writeBack Stage:--- INPUTS:\n in_wb: %b \n",in_WB,
             "in_ALU_result: %d \n",in_ALU_result,
             "in_memory_word_read: %d \n",in_memory_word_read,
             "in_rd: %d \n",in_rd,
@@ -401,7 +413,9 @@ print = 0;
 end
 
 main m(clk);
-
+initial begin
+ #100 $finish;
+end
 
 endmodule
 
