@@ -170,21 +170,23 @@ reg [2:0] out_M;
 reg [4:0] out_EX;
 //reg [31:0] out_incremented_pc, out_data1, out_data2, out_extended;
 reg [31:0] out_incremented_pc;
-reg [4:0] out_rd, out_rt;
+reg [4:0] out_rd, out_rt,rs;
 
 
 
 
 wire [5:0] op_code = in_instruction[5:0];
 wire [15:0] into_extender = in_instruction[15:0];
-wire [4:0] read1 = in_instruction[10:6];
-wire [4:0] read2 =in_instruction[15:11];
-
+// wire [4:0] read1 = in_instruction[25:21];
+// wire [4:0] read2 =in_instruction[15:11];
+// el in instruction :  000000   01010   01011    01001   00000   100100
 always @(posedge clk)
 begin
  out_incremented_pc = in_incremented_pc  ;
- out_rd = in_instruction[20:16];
- out_rt = in_instruction[15:11];
+    out_rd = in_instruction[15:11];
+    out_rt = in_instruction[20:16];
+    rs= in_instruction[25:21];
+
 end
 
 wire [2:0] ALUop;
@@ -196,8 +198,13 @@ begin
  out_EX = {RegDst ,ALUop, ALUsrc};
 end
 
+always @ (posedge clk)
+begin
 $display("in_regWrite %d, read1 %d, read2 %d, in_writeToReg %d, in_data %d, out_data1 %d, out_data2 %d", in_regWrite, read1, read2, in_writeToReg, in_data, out_data1, out_data2);
-RegisterFile regfile(clk,in_regWrite, read1, read2, in_writeToReg, in_data, out_data1, out_data2 );
+end
+
+mux_2to1_5b()
+RegisterFile regfile(clk,in_regWrite, rs, read2, in_writeToReg, in_data, out_data1, out_data2 );
 SignExtender_16to32 se(clk,out_extended, into_extender);
 
 
