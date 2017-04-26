@@ -26,13 +26,13 @@ instruction[7:0] <= registers[read_address+3][7:0];
 end
 endmodule
 
-module tb();
+module tb7();
 
 	reg [31:0] read_address;
 	reg clk;
 	wire[31:0] instruction;
 
-	Instruction_memory test(read_address, instruction);
+	Instruction_memory test(clk,read_address, instruction);
 
 	initial begin
 		clk=0;

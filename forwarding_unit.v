@@ -24,13 +24,13 @@ endmodule
 
 
 
-module testbench();
+module testbench6();
 wire [1:0] outA, outB;
 reg clk;
 reg RegWrite_ex_mem, RegWrite_mem_wb;
 reg [4:0] Rd_ex_mem, Rd_mem_wb, Rs_id_ex, Rt_id_ex;
 
-forwarding_unit test(outA, outB, RegWrite_ex_mem, RegWrite_mem_wb, Rd_ex_mem, Rd_mem_wb, Rs_id_ex, Rt_id_ex);
+forwarding_unit test(clk,outA, outB, RegWrite_ex_mem, RegWrite_mem_wb, Rd_ex_mem, Rd_mem_wb, Rs_id_ex, Rt_id_ex);
 
 initial begin
 		clk=0;

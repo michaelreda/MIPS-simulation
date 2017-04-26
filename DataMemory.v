@@ -32,14 +32,14 @@ end
 
 endmodule
 
-module tb();
+module tb5();
 
 	reg MemRead, MemWrite;
 	reg[31:0] inputAddress,inputData;
 	reg clk;
 	wire[31:0] outputData;
 
-	DataMemory test(
+	DataMemory test(clk,
 	outputData,
 	inputAddress,inputData,
 	MemRead, MemWrite);

@@ -14,7 +14,7 @@ module SignExtender_16to32(clk,outData,inData);
 endmodule
 
 
-module test();
+module test12();
 
 reg[15:0] inData;
 wire[31:0] outData;

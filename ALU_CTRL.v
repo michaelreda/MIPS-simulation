@@ -41,14 +41,14 @@ endmodule
 
 
 
-module test();
+module test2();
 reg [5:0] in;
 reg [2:0] alu_op;
 reg clk;
 wire [2:0] sel;
 
 
-ALU_CTRL test(in, alu_op, sel);
+ALU_CTRL test(clk,in, alu_op, sel);
 
 initial begin
 		clk=0;

@@ -16,13 +16,13 @@ input [31:0] in1, in2, in3;
  endmodule
 
 
-module testbench();
+module testbench9();
 reg clk;
 reg [31:0] in1, in2, in3;
 reg [1:0] sel;
 wire [31:0] out;
 
-MUX_3x1 test(out, in1 , in2,in3,sel );
+MUX_3x1 test(clk,out, in1 , in2,in3,sel );
 
 initial begin
 		clk=0;

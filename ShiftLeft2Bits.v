@@ -11,12 +11,12 @@ module ShiftLeft2Bits(clk,outData,inData);
 endmodule
 
 
-module test();
+module test11();
 reg clk;
 reg [31:0] inData;
 wire [31:0] outData;
 
-ShiftLeft2Bits test(outData,inData);
+ShiftLeft2Bits test(clk,outData,inData);
 
 
 initial begin

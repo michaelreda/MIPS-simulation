@@ -64,7 +64,7 @@ end
 endmodule
 
 
-module testbench();
+module testbench4();
 
 reg clk;
 reg [5:0] opcode;

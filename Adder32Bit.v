@@ -13,14 +13,14 @@ module Adder32Bit(clk,out,in1, in2);
         end
 endmodule
 
-module test();
+module test1();
 reg clk;
 reg [31:0] in1, in2;
 // wire overF;
 wire [31:0] out;
 
 // Adder32Bit test(out, overF, in1, in2);
-Adder32Bit test(out, in1, in2);
+Adder32Bit test(clk,out, in1, in2);
 
 initial begin
 		clk=0;

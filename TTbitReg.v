@@ -13,13 +13,13 @@ module TTbitReg (clk,reset, in, out);
 endmodule
 
 
-module test();
+module test13();
 reg clk,reset;
 reg [31:0] in;
 
 wire [31:0] out;
 
-TTbitReg test(reset,in, out);
+TTbitReg test(clk,reset,in, out);
 
 initial begin
 		clk=0;

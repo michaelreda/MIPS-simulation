@@ -12,13 +12,13 @@ module MUX_2to1(clk,out, in1 , in2, select );
     end
  endmodule
 
-module testbench();
+module testbench8();
 reg clk;
 reg [31:0] in1, in2;
 reg sel;
 wire [31:0] out;
 
-MUX_2to1 test(out, in1 , in2, sel );
+MUX_2to1 test(clk,out, in1 , in2, sel );
 
 initial begin
 		clk=0;

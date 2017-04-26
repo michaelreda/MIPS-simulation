@@ -62,18 +62,16 @@ wire [31:0] mux_out, pc_out;
 //initial PC = 32'd40;
 
 MUX_2to1 pc_update(clk,mux_out, out_incremented_pc , in_branch, in_branchSel);
-TTbitReg PC (clk,0, mux_out, pc_out);
+TTbitReg PC (clk,32'b0, mux_out, pc_out);
 Instruction_memory IM(clk,pc_out, out_instruction);
-Adder32Bit pc_increment(clk,out_incremented_pc, overflowBit,pc_out, 32'd4);
+Adder32Bit pc_increment(clk,out_incremented_pc,pc_out, 32'd4);
 
 always @ (posedge clk)
 begin
 $monitor("---fetch Stage:--- INPUTS:\n in_branchSel: %b \n",in_branchSel,
           "in_branch %b \n",in_branch,
           "---fetch Stage:--- OUTPUTS:\n out_instruction %b \n",out_instruction,
-          "out_M %b \n",out_M,
-          "out_EX %b \n",out_EX,
-         "out_incremented_pc %d \n",out_incremented_pc,
+         "out_instruction %d \n",out_instruction,
           "out_incremented_pc %d \n",out_incremented_pc,
           );
 end
@@ -250,7 +248,7 @@ begin
  out_branch_address= in_branch_address;
 end
 
-DataMemory(out_memory_word_read,in_ALU_result,in_reg_write_data,in_M[0],in_M[1]);
+DataMemory d(out_memory_word_read,in_ALU_result,in_reg_write_data,in_M[0],in_M[1]);
 
  always @ (posedge clk)
 begin
@@ -294,7 +292,7 @@ begin
 	 out_rd = in_rd;
      out_regWrite= in_WB[0];
 end	 
-	MUX_2to1(out_writeData, in_ALU_result,in_memory_word_read, in_WB[1]);
+	MUX_2to1 m(out_writeData, in_ALU_result,in_memory_word_read, in_WB[1]);
 
 
   always @ (posedge clk)
@@ -311,7 +309,7 @@ endmodule
 
 ///test bench///////////////
 
-module testbench();
+module testbenchmain();
 reg clk;
 
 initial begin
@@ -320,7 +318,7 @@ initial begin
   #5 clk = ~clk;
 end
 
-main(clk);
+main m(clk);
 
 
 endmodule

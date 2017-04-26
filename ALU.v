@@ -25,7 +25,7 @@ endcase
 end
 endmodule
 
-module test();
+module test3();
 
 reg[31:0] x,y;
 reg[2:0] select;
