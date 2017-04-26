@@ -8,8 +8,8 @@ reg [2:0] select;
 
 always @(posedge clk)
 begin
-if(in!=6'bx)
-begin
+// if(in!=6'bX)
+// begin
 case(in)
 
 6'h20: begin
@@ -36,9 +36,9 @@ case(in)
 endcase
 end
 
-else
-select <= alu_op;
-end
+// else
+// select <= alu_op;
+// end
 
 endmodule
 

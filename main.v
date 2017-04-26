@@ -282,6 +282,7 @@ wire[31:0] ALU_input2;
 MUX_2to1 mux1(clk,ALU_input2,in_regData2,in_sign_extended_offset,in_EX[0]);
 always @(posedge clk)
 begin
+$display("in %h,opcode %h,ALU_CTRL_output %d",in_sign_extended_offset[5:0],in_EX[4:2],ALU_CTRL_output);
 $display("in_regData1 %d,ALU_input2 %d,out_ALU_result %d,ALU_CTRL_output %b,out_zero_flag %d",in_regData1,ALU_input2,out_ALU_result,ALU_CTRL_output,out_zero_flag );
 end
 ALU alu(clk,in_regData1,ALU_input2,out_ALU_result,ALU_CTRL_output,out_zero_flag );

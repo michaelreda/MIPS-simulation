@@ -8,6 +8,13 @@ input MemRead, MemWrite, clk;
 reg [7:0]memory[255:0]; //memory //check about size !
 
 
+
+initial memory[1]= 8'b0;
+initial memory[2]= 8'b11111111;
+initial memory[3]= 8'b11111111;
+initial memory[4]= 8'b0;
+
+
 reg[255:0] i;
 initial fork
     #98 $display("---------Memory Data---------");
