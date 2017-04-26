@@ -335,13 +335,17 @@ begin
  out_WB = in_WB;
  out_rd = in_rd;
  out_branch_address= in_branch_address;
+ out_ALU_result=in_ALU_result;
 end
 
 DataMemory d(clk,out_memory_word_read,in_ALU_result,in_reg_write_data,in_M[0],in_M[1]);
 
  always @ (posedge clk)
 begin
-PCSrc = in_zero_flag & in_M[2];
+if(in_zero_flag==0)
+    PCSrc = 0;
+else
+    PCSrc=1;
 end
 
 always @ (posedge clk)
