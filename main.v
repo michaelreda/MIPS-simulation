@@ -205,7 +205,7 @@ MUX_2to1 mux1(clk,ALU_input2,in_regData2,in_sign_extended_offset,in_EX[0]);
 
 ALU alu(clk,in_regData1,ALU_input2,out_ALU_result,ALU_CTRL_output,out_zero_flag );
 
-MUX_2to1 mux2(clk,out_rd,in_rt,in_rd,in_EX[1]);
+MUX_2to1_5b mux2(clk,out_rd,in_rt,in_rd,in_EX[1]);
 
 always @ (posedge clk)
 begin
@@ -293,11 +293,12 @@ module writeBack(clk,in_WB,in_ALU_result,in_memory_word_read,in_rd,out_writeData
 	input [31:0] in_ALU_result,in_memory_word_read;
   input [4:0] in_rd;
 	output  out_regWrite;
-	output  [31:0] out_writeData, out_rd;
+	output  [31:0] out_writeData;
+	output [4:0] out_rd;
 
 	reg  out_regWrite;
 //	reg  [31:0] out_writeData, out_rd;
-	reg  [31:0]  out_rd;
+	reg  [4:0]  out_rd;
 
 always @ (posedge clk)
 begin
