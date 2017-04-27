@@ -96,7 +96,7 @@ reg PCSrc;
 reg [31:0] in_branchreg;
 
 reg[31:0] out_incremented_pc_prev;
-reg [1:0] first_cycle = 2'b11;
+
 
 always@(posedge clk)
 begin
@@ -117,6 +117,8 @@ begin
         in_branchreg= 32'b0;
     else
         in_branchreg=in_branch;
+
+
 
     $display("mux_out %d, out_incremented_pc %d, in_branchreg %d, PCSrc %d",mux_out, out_incremented_pc , in_branchreg, PCSrc);
 end
@@ -252,6 +254,7 @@ output  [4:0] out_rd;
   reg [1:0] out_WB;
   //reg [31:0] out_branch_address,out_ALU_result,out_reg_write_data;
   reg [31:0] out_reg_write_data;
+  reg [31:0] zero = 32'd0;
   //reg out_zero_flag;
 //  reg [4:0] out_rd;
 
@@ -261,6 +264,7 @@ begin
  out_M = in_M;
  out_reg_write_data=in_regData2;
 end
+
 
 wire [31:0] shifted_sign_extended_offset;
 ShiftLeft2Bits shifter(clk,shifted_sign_extended_offset,in_sign_extended_offset);
@@ -327,7 +331,7 @@ reg [31:0] out_ALU_result;
  reg PCSrc;
  reg [31:0] out_branch_address;
 
- always @ (posedge clk)
+ always @ (negedge clk)
 begin
  out_WB = in_WB;
  out_rd = in_rd;
@@ -384,7 +388,7 @@ begin
 	 out_rd = in_rd;
      out_regWrite= in_WB[0];
 end
-	MUX_2to1 m(clk,out_writeData, in_ALU_result,in_memory_word_read, in_WB[1]);
+	MUX_2to1_wb m(clk,out_writeData, in_ALU_result,in_memory_word_read, in_WB[1]);
 
 
   always @ (posedge clk)

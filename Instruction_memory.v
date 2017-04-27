@@ -7,12 +7,12 @@ input clk;
 
 reg [7:0] registers [255:0];
 
-//addi $t1,$t2,100
-//0010 0001 0100 1001 0000 0000 0110 0100
-// initial registers[0] = 8'b0010_0001;
-// initial registers[1] = 8'b0100_1001;
-// initial registers[2] = 8'b0000_0000;
-// initial registers[3] = 8'b0110_0100;
+//addi $t5,$t2,100
+//0010 0001 0100 1101 0000 0000 0110 0100
+initial registers[0] = 8'b0010_0001;
+initial registers[1] = 8'b0100_1101;
+initial registers[2] = 8'b0000_0000;
+initial registers[3] = 8'b0110_0100;
 
 
 
