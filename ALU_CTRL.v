@@ -37,20 +37,24 @@ endcase
 end
 else begin
 case(alu_op)
+3'd0:  begin
+select <= 3'd0;
+       end
 3'd1:  begin
 select <= 3'd0;
        end
 3'd2: begin
 select <= 3'd2;
-       end     
+       end
 3'd3: begin
 select <= 3'd3;
-       end     
-       
+       end
 
 endcase
 
  end
+ if(select ===3'bXXX)
+    select =3'b000;
 end
 // else
 // select <= alu_op;

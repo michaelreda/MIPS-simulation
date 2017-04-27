@@ -7,12 +7,12 @@ input clk;
 
 reg [7:0] registers [255:0];
 
-//addi $t5,$t2,100
+//addi $t6,$t2,100
 //0010 0001 0100 1101 0000 0000 0110 0100
-initial registers[0] = 8'b0010_0001;
-initial registers[1] = 8'b0100_1101;
-initial registers[2] = 8'b0000_0000;
-initial registers[3] = 8'b0110_0100;
+// initial registers[8] = 8'b0010_0001;
+// initial registers[9] = 8'b0100_1110;
+// initial registers[10] = 8'b0000_0000;
+// initial registers[11] = 8'b0110_0100;
 
 
 
@@ -40,10 +40,10 @@ initial registers[3] = 8'b0110_0100;
 
 //sw $t2,10($0)
 //1010 1100 0000 1010 0000 0000 0000 1010
-// initial registers[4] = 8'b1010_1100;
-// initial registers[5] = 8'b0000_1010;
-// initial registers[6] = 8'b0000_0000;
-// initial registers[7] = 8'b0000_0100;
+initial registers[0] = 8'b1010_1100;
+initial registers[1] = 8'b0000_1010;
+initial registers[2] = 8'b0000_0000;
+initial registers[3] = 8'b0000_1010;
 
 
 //beq $0,$0,30
