@@ -39,7 +39,17 @@ begin
 
 		6'b001000: begin	 //addi
 				RegDst   <= 1'b0;
-				ALUop    <= 3'b0;
+				ALUop    <= 3'd1;
+				ALUsrc   <= 1'b1;
+			end
+			6'b001100: begin	 //addi
+				RegDst   <= 1'b0;
+				ALUop    <= 3'd2;
+				ALUsrc   <= 1'b1;
+			end
+			6'b001101: begin	 //addi
+				RegDst   <= 1'b0;
+				ALUop    <= 3'd3;
 				ALUsrc   <= 1'b1;
 			end
 

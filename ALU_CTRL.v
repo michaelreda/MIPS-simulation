@@ -8,8 +8,8 @@ reg [2:0] select;
 
 always @(posedge clk)
 begin
-// if(in!=6'bX)
-// begin
+ if(alu_op==0)
+ begin
 case(in)
 
 6'h20: begin
@@ -35,7 +35,23 @@ case(in)
        end
 endcase
 end
+else begin
+case(alu_op)
+3'd1:  begin
+select <= 3'd0;
+       end
+3'd2: begin
+select <= 3'd2;
+       end     
+3'd3: begin
+select <= 3'd3;
+       end     
+       
 
+endcase
+
+ end
+end
 // else
 // select <= alu_op;
 // end
