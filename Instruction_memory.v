@@ -48,10 +48,17 @@ reg [7:0] registers [255:0];
 
 //beq $0,$0,30
 //0001 0000 0000 0000 0000 0000 0000 0110
-initial registers[0] = 8'b0001_0000;
-initial registers[1] = 8'b0000_0000;
-initial registers[2] = 8'b0000_0000;
-initial registers[3] = 8'b0000_0110;
+// initial registers[0] = 8'b0001_0000;
+// initial registers[1] = 8'b0000_0000;
+// initial registers[2] = 8'b0000_0000;
+// initial registers[3] = 8'b0000_0110;
+
+////beq $0,$10,30
+//100a0006
+// initial registers[0] = 8'h10;
+// initial registers[1] = 8'h0a;
+// initial registers[2] = 8'h00;
+// initial registers[3] = 8'h06;
 
 // initial registers[0] = 8'b00000001;
 // initial registers[1] = 8'b01001011;
