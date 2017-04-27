@@ -3,7 +3,7 @@ module MUX_2to1(clk,out, in1 , in2, select );
   input select,clk;
   output [31:0]out;
   reg [31:0]out;
-  always @(posedge clk )
+  always @(*)
     begin
       case(select)
           1'b0:   out=in1;

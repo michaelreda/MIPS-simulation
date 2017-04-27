@@ -108,29 +108,22 @@ begin
     // if(out_incremented_pc_prev==out_incremented_pc && first_cycle==0) //halting condition if PC didn't change
     //     $finish;
 
-    if(in_branchSel == 1'bX)
+    if(in_branchSel === 1'bX)
         PCSrc = 1'b0;
     else
         PCSrc=in_branchSel;
 
-    if(in_branch[0] == 1'bX)
+    if(in_branch[0] === 1'bX)
         in_branchreg= 32'b0;
     else
         in_branchreg=in_branch;
+
+    $display("mux_out %d, out_incremented_pc %d, in_branchreg %d, PCSrc %d",mux_out, out_incremented_pc , in_branchreg, PCSrc);
 end
 
 
-
-//initial PC = 32'd40;
-
 MUX_2to1 pc_update(clk,mux_out, out_incremented_pc , in_branchreg, PCSrc);
-reg reset;
-always@(posedge clk)
-begin
-    if(reset === 1'bX)
-     reset=1;
- end
-TTbitReg PC (clk,reset, mux_out, pc_out);
+TTbitReg PC (clk, mux_out, pc_out);
 Instruction_memory IM(clk,pc_out, out_instruction);
 Adder32Bit pc_increment(clk,out_incremented_pc,pc_out, 32'd4);
 
@@ -140,7 +133,6 @@ $display("---fetch Stage:--- INPUTS:\n in_branchSel: %b \n",in_branchSel,
           "PCSrc %b \n",PCSrc,
           "in_branch %b \n",in_branch,
           "in_branchreg %b \n",in_branchreg,
-          "reset %b \n",reset,
           "---fetch Stage:--- OUTPUTS:\nout_instruction %b \n",out_instruction,
           "out_incremented_pc %d \n",out_incremented_pc,
           );
