@@ -23,6 +23,14 @@ reg [7:0] registers [255:0];
  initial registers[2] = 8'b0100_1000;
  initial registers[3] = 8'b0010_0010;
 
+//add $t5,$t2,$t3
+//0000 0001 0100 1011 0110 1000 0010 0000
+initial registers[4] = 8'b0000_0001;
+initial registers[5] = 8'b0100_1011;
+initial registers[6] = 8'b0110_1000;
+initial registers[7] = 8'b0010_0000;
+
+
 //lw $t5,1($0)
 //1000 1100 0000 1101 0000 0000 0000 0001
 // initial registers[0] = 8'b1000_1100;
@@ -32,10 +40,10 @@ reg [7:0] registers [255:0];
 
 //sw $t2,10($0)
 //1010 1100 0000 1010 0000 0000 0000 1010
-initial registers[12] = 8'b1010_1100;
-initial registers[13] = 8'b0000_1010;
-initial registers[14] = 8'b0000_0000;
-initial registers[15] = 8'b0000_0100;
+// initial registers[4] = 8'b1010_1100;
+// initial registers[5] = 8'b0000_1010;
+// initial registers[6] = 8'b0000_0000;
+// initial registers[7] = 8'b0000_0100;
 
 // initial registers[0] = 8'b00000001;
 // initial registers[1] = 8'b01001011;
