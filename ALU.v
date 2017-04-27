@@ -6,7 +6,7 @@ input[2:0] aluop;
 output reg [31:0] out;
 output reg zeroflag;
 
-always @(posedge clk)
+always @(*)
 begin
 if(in1==in2)
 zeroflag=1;

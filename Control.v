@@ -8,7 +8,7 @@ input[5:0] opcode;
 input clk;
 
 
-always @(posedge clk)
+always @(*)
 begin
         //defaults
 		ALUop[2:0]	<= 3'b000;
@@ -26,20 +26,30 @@ begin
 				MemRead  <= 1'b1;
 				RegDst   <= 1'b0;
 				MemtoReg <= 1'b1;
-				ALUop    <= 3'b0;
+				ALUop    <= 3'b000;
 				ALUsrc   <= 1'b1;
 		    	end
 
 		6'b101011: begin	//sw
 				MemWrite <= 1'b1;
-				ALUop <= 1'b0;
+				ALUop <= 3'b000;
 				ALUsrc   <= 3'b001;
 				RegWrite <= 1'b0;
 			end
 
 		6'b001000: begin	 //addi
 				RegDst   <= 1'b0;
-				ALUop    <= 3'b0;
+				ALUop    <= 3'd1;
+				ALUsrc   <= 1'b1;
+			end
+			6'b001100: begin	 //addi
+				RegDst   <= 1'b0;
+				ALUop    <= 3'd2;
+				ALUsrc   <= 1'b1;
+			end
+			6'b001101: begin	 //addi
+				RegDst   <= 1'b0;
+				ALUop    <= 3'd3;
 				ALUsrc   <= 1'b1;
 			end
 
